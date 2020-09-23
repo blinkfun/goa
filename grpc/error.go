@@ -76,9 +76,7 @@ func EncodeError(err error) error {
 	if gerr, ok := err.(*goa.ServiceError); ok {
 		// goa service error type. Compute the status code from the service error
 		// characteristics and create a new detailed gRPC status error.
-
-		name := gerr.Name
-		c, ok := GetCode(name)
+		c, ok := GetCode(gerr.Name)
 
 		var code = codes.Unknown
 		if ok {

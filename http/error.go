@@ -45,8 +45,7 @@ func NewErrorResponse(err error) Statuser {
 // error. This method is used by the generated server code when the error is not
 // described explicitly in the design.
 func (resp *ErrorResponse) StatusCode() int {
-	name := resp.Name
-	value, ok := GetCode(name)
+	value, ok := GetCode(resp.Name)
 	if ok {
 		return value
 	}

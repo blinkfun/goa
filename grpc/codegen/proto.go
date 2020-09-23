@@ -29,6 +29,7 @@ func protoFile(genpkg string, svc *expr.GRPCServiceExpr) *codegen.File {
 	data := GRPCServices.Get(svc.Name())
 	svcName := codegen.SnakeCase(data.Service.VarName)
 	path := filepath.Join(codegen.Gendir, "grpc", svcName, pbPkgName, svcName+".proto")
+	meta := svc.Meta
 
 	sections := []*codegen.SectionTemplate{
 		// header comments
@@ -47,6 +48,7 @@ func protoFile(genpkg string, svc *expr.GRPCServiceExpr) *codegen.File {
 			Data: map[string]interface{}{
 				"ProtoVersion": ProtoVersion,
 				"Pkg":          codegen.SnakeCase(codegen.Goify(svcName, false)),
+				"Options":      protoOptions(meta),
 			},
 		},
 		// service definition
@@ -77,6 +79,10 @@ func protoc(path string) error {
 		return fmt.Errorf("failed to run protoc: %s: %s", err, output)
 	}
 
+	return nil
+}
+
+func protoOptions(meta expr.MetaExpr) []string {
 	return nil
 }
 
