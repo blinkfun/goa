@@ -17,12 +17,6 @@ type (
 		ID string `json:"id" xml:"id" form:"id"`
 		// Message describes the specific error occurrence.
 		Message string `json:"message" xml:"message" form:"message"`
-		// Temporary indicates whether the error is temporary.
-		Temporary bool `json:"temporary" xml:"temporary" form:"temporary"`
-		// Timeout indicates whether the error is a timeout.
-		Timeout bool `json:"timeout" xml:"timeout" form:"timeout"`
-		// Fault indicates whether the error is a server-side fault.
-		Fault bool `json:"fault" xml:"fault" form:"fault"`
 	}
 
 	// Statuser is implemented by error response object to provide the response
@@ -38,12 +32,9 @@ type (
 func NewErrorResponse(err error) Statuser {
 	if gerr, ok := err.(*goa.ServiceError); ok {
 		return &ErrorResponse{
-			Name:      gerr.Name,
-			ID:        gerr.ID,
-			Message:   gerr.Message,
-			Timeout:   gerr.Timeout,
-			Temporary: gerr.Temporary,
-			Fault:     gerr.Fault,
+			Name:    gerr.Name,
+			ID:      gerr.ID,
+			Message: gerr.Message,
 		}
 	}
 	return NewErrorResponse(goa.Fault(err.Error()))
@@ -54,17 +45,10 @@ func NewErrorResponse(err error) Statuser {
 // error. This method is used by the generated server code when the error is not
 // described explicitly in the design.
 func (resp *ErrorResponse) StatusCode() int {
-	if resp.Fault {
-		return http.StatusInternalServerError
+	name := resp.Name
+	value, ok := GetCode(name)
+	if ok {
+		return value
 	}
-	if resp.Timeout {
-		if resp.Temporary {
-			return http.StatusGatewayTimeout
-		}
-		return http.StatusRequestTimeout
-	}
-	if resp.Temporary {
-		return http.StatusServiceUnavailable
-	}
-	return http.StatusBadRequest
+	return http.StatusInternalServerError
 }

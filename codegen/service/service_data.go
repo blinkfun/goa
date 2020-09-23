@@ -86,12 +86,6 @@ type (
 		TypeName string
 		// TypeRef is the reference to the error type.
 		TypeRef string
-		// Temporary indicates whether the error is temporary.
-		Temporary bool
-		// Timeout indicates whether the error is due to timeouts.
-		Timeout bool
-		// Fault indicates whether the error is server-side fault.
-		Fault bool
 	}
 
 	// MethodData describes a single service method.
@@ -688,18 +682,12 @@ func collectTypes(at *expr.AttributeExpr, scope *codegen.NameScope, seen map[str
 
 // buildErrorInitData creates the data needed to generate code around endpoint error return values.
 func buildErrorInitData(er *expr.ErrorExpr, scope *codegen.NameScope) *ErrorInitData {
-	_, temporary := er.AttributeExpr.Meta["goa:error:temporary"]
-	_, timeout := er.AttributeExpr.Meta["goa:error:timeout"]
-	_, fault := er.AttributeExpr.Meta["goa:error:fault"]
 	return &ErrorInitData{
 		Name:        fmt.Sprintf("Make%s", codegen.Goify(er.Name, true)),
 		Description: er.Description,
 		ErrName:     er.Name,
 		TypeName:    scope.GoTypeName(er.AttributeExpr),
 		TypeRef:     scope.GoTypeRef(er.AttributeExpr),
-		Temporary:   temporary,
-		Timeout:     timeout,
-		Fault:       fault,
 	}
 }
 

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 // NOTE: If there are any changes to this file, run the protoc command as
-// below from the pb directory to compile and generte the error.pb.go file.
+// below from the pb directory to compile and generate the error.pb.go file.
 //
 // $ protoc -I . error.proto --go_out=plugins=grpc:.
 
@@ -16,11 +16,5 @@ message ErrorResponse {
   // id is the unique error instance identifier.
   string id = 2;
   // msg describes the specific error occurrence.
-  string msg = 3;
-  // temporary indicates whether the error is temporary.
-  bool temporary = 4;
-  // timeout indicates whether the error is a timeout.
-  bool timeout = 5;
-  // fault indicates whether the error is a server-side fault.
-  bool fault = 6;
+  string message = 3;
 }

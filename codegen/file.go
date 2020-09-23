@@ -22,7 +22,7 @@ import (
 // Gendir is the name of the subdirectory of the output directory that contains
 // the generated files. This directory is wiped and re-written each time goa is
 // run.
-const Gendir = "gen"
+var Gendir = "gen"
 
 type (
 	// A File contains the logic to generate a complete file.

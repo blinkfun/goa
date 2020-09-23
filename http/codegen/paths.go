@@ -18,6 +18,24 @@ func PathFiles(root *expr.RootExpr) []*codegen.File {
 	return fw
 }
 
+// ClientPathFiles returns the client service path files.
+func ClientPathFiles(root *expr.RootExpr) []*codegen.File {
+	fw := make([]*codegen.File, len(root.API.HTTP.Services))
+	for i := 0; i < len(root.API.HTTP.Services); i++ {
+		fw[i] = clientPath(root.API.HTTP.Services[i])
+	}
+	return fw
+}
+
+// ServerPathFiles returns the server service path files.
+func ServerPathFiles(root *expr.RootExpr) []*codegen.File {
+	fw := make([]*codegen.File, len(root.API.HTTP.Services))
+	for i := 0; i < len(root.API.HTTP.Services); i++ {
+		fw[i] = serverPath(root.API.HTTP.Services[i])
+	}
+	return fw
+}
+
 // serverPath returns the server file containing the request path constructors
 // for the given service.
 func serverPath(svc *expr.HTTPServiceExpr) *codegen.File {

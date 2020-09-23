@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"net"
 	"net/http"
 	"os"
 	"sort"
@@ -44,12 +43,6 @@ type (
 		Service string
 		// Method is the name of the service method.
 		Method string
-		// Is the error temporary?
-		Temporary bool
-		// Is the error a timeout?
-		Timeout bool
-		// Is the error a server-side fault?
-		Fault bool
 	}
 )
 
@@ -191,30 +184,10 @@ func ErrInvalidResponse(svc, m string, code int, body string) error {
 	}
 	msg := fmt.Sprintf("invalid response code %#v"+b+"%s", code, body)
 
-	temporary := code == http.StatusServiceUnavailable ||
-		code == http.StatusConflict ||
-		code == http.StatusTooManyRequests ||
-		code == http.StatusGatewayTimeout
-
-	timeout := code == http.StatusRequestTimeout ||
-		code == http.StatusGatewayTimeout
-
-	fault := code == http.StatusInternalServerError ||
-		code == http.StatusNotImplemented ||
-		code == http.StatusBadGateway
-
-	return &ClientError{Name: "invalid_response", Message: msg, Service: svc, Method: m,
-		Temporary: temporary, Timeout: timeout, Fault: fault}
+	return &ClientError{Name: "invalid_response", Message: msg, Service: svc, Method: m}
 }
 
 // ErrRequestError is the error returned when the request fails to be sent.
 func ErrRequestError(svc, m string, err error) error {
-	temporary := false
-	timeout := false
-	if nerr, ok := err.(net.Error); ok {
-		temporary = nerr.Temporary()
-		timeout = nerr.Timeout()
-	}
-	return &ClientError{Name: "request_error", Message: err.Error(), Service: svc, Method: m,
-		Temporary: temporary, Timeout: timeout}
+	return &ClientError{Name: "request_error", Message: err.Error(), Service: svc, Method: m}
 }

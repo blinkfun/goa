@@ -8,6 +8,7 @@ import (
 
 	"flag"
 
+	"goa.design/goa/v3/codegen"
 	goa "goa.design/goa/v3/pkg"
 )
 
@@ -26,7 +27,7 @@ func main() {
 		case "version":
 			fmt.Println("Goa version " + goa.Version())
 			os.Exit(0)
-		case "gen", "example":
+		case "gen", "example", "gen-server":
 			if len(os.Args) == 2 {
 				usage()
 			}
@@ -40,6 +41,7 @@ func main() {
 
 	var (
 		output = "."
+		gendir = ""
 		debug  bool
 	)
 	if len(os.Args) > offset+1 {
@@ -47,6 +49,9 @@ func main() {
 			fset = flag.NewFlagSet("default", flag.ExitOnError)
 			o    = fset.String("o", "", "output `directory`")
 			out  = fset.String("output", output, "output `directory`")
+			//
+			g   = fset.String("g", "", "gen directory")
+			gen = fset.String("gen", gendir, "gen directory")
 		)
 		fset.BoolVar(&debug, "debug", false, "Print debug information")
 
@@ -57,9 +62,14 @@ func main() {
 		if output == "" {
 			output = *out
 		}
+
+		gendir = *g
+		if gendir == "" {
+			gendir = *gen
+		}
 	}
 
-	gen(cmd, path, output, debug)
+	gen(cmd, path, output, gendir, debug)
 }
 
 // help with tests
@@ -68,12 +78,17 @@ var (
 	gen   = generate
 )
 
-func generate(cmd, path, output string, debug bool) {
+func generate(cmd, path, output, gendir string, debug bool) {
 	var (
 		files []string
 		err   error
 		tmp   *Generator
 	)
+
+	if len(gendir) > 0 {
+		codegen.Gendir = gendir
+		fmt.Printf("The gen directory is: %s\n", gendir)
+	}
 
 	if _, err = build.Import(path, ".", 0); err != nil {
 		goto fail
@@ -118,6 +133,8 @@ Usage:
 Commands:
   gen
         Generate service interfaces, endpoints, transport code and OpenAPI spec.
+  gen-server
+        Generate service interfaces, server's endpoints, server's transport code only and OpenAPI spec.
   example
         Generate example server and client tool.
   version
@@ -130,13 +147,14 @@ Args:
 Flags:
   -o, -output DIRECTORY
         output directory, defaults to the current working directory
-
+  -g, -gen DIRECTORY
+        gen directory, defaults is gen
   -debug
         Print debug information (mainly intended for Goa developers)
 
 Example:
 
-  goa gen goa.design/examples/cellar/design -o gendir
+  goa gen goa.design/examples/cellar/design -o gendir -g generated
 
 `)
 	os.Exit(1)

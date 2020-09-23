@@ -18,25 +18,19 @@ type (
 		ID string
 		// Message contains the specific error details.
 		Message string
-		// Is the error a timeout?
-		Timeout bool
-		// Is the error temporary?
-		Temporary bool
-		// Is the error a server-side fault?
-		Fault bool
 	}
 )
 
 // Fault creates an error given a format and values a la fmt.Printf. The error
 // has the Fault field set to true.
 func Fault(format string, v ...interface{}) *ServiceError {
-	return newError("fault", false, false, true, format, v...)
+	return newError("fault", format, v...)
 }
 
 // PermanentError creates an error given a name and a format and values a la
 // fmt.Printf.
 func PermanentError(name, format string, v ...interface{}) *ServiceError {
-	return newError(name, false, false, false, format, v...)
+	return newError(name, format, v...)
 }
 
 // TemporaryError is an error class that indicates that the error is temporary
@@ -44,20 +38,20 @@ func PermanentError(name, format string, v ...interface{}) *ServiceError {
 // error given a name and a format and values a la fmt.Printf. The error has the
 // Temporary field set to true.
 func TemporaryError(name, format string, v ...interface{}) *ServiceError {
-	return newError(name, false, true, false, format, v...)
+	return newError(name, format, v...)
 }
 
 // PermanentTimeoutError creates an error given a name and a format and values a
 // la fmt.Printf. The error has the Timeout field set to true.
 func PermanentTimeoutError(name, format string, v ...interface{}) *ServiceError {
-	return newError(name, true, false, false, format, v...)
+	return newError(name, format, v...)
 }
 
 // TemporaryTimeoutError creates an error given a name and a format and values a
 // la fmt.Printf. The error has both the Timeout and Temporary fields set to
 // true.
 func TemporaryTimeoutError(name, format string, v ...interface{}) *ServiceError {
-	return newError(name, true, true, false, format, v...)
+	return newError(name, format, v...)
 }
 
 // MissingPayloadError is the error produced by the generated code when a
@@ -171,9 +165,6 @@ func MergeErrors(err, other error) error {
 		e.Name = o.Name
 	}
 	e.Message = e.Message + "; " + o.Message
-	e.Timeout = e.Timeout && o.Timeout
-	e.Temporary = e.Temporary && o.Temporary
-	e.Fault = e.Fault && o.Fault
 
 	return e
 }
@@ -184,14 +175,11 @@ func (s *ServiceError) Error() string { return s.Message }
 // ErrorName returns the error name.
 func (s *ServiceError) ErrorName() string { return s.Name }
 
-func newError(name string, timeout, temporary, fault bool, format string, v ...interface{}) *ServiceError {
+func newError(name string, format string, v ...interface{}) *ServiceError {
 	return &ServiceError{
-		Name:      name,
-		ID:        NewErrorID(),
-		Message:   fmt.Sprintf(format, v...),
-		Timeout:   timeout,
-		Temporary: temporary,
-		Fault:     fault,
+		Name:    name,
+		ID:      NewErrorID(),
+		Message: fmt.Sprintf(format, v...),
 	}
 }
 
@@ -202,7 +190,6 @@ func asError(err error) *ServiceError {
 			Name:    "error",
 			ID:      NewErrorID(),
 			Message: err.Error(),
-			Fault:   true, // Default to fault for unexpected errors
 		}
 	}
 	return e

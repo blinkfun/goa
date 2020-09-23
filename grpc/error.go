@@ -21,12 +21,6 @@ type (
 		Service string
 		// Method is the name of the service method.
 		Method string
-		// Is the error temporary?
-		Temporary bool
-		// Is the error a timeout?
-		Timeout bool
-		// Is the error a server-side fault?
-		Fault bool
 	}
 )
 
@@ -38,12 +32,9 @@ type (
 func NewErrorResponse(err error) *goapb.ErrorResponse {
 	if gerr, ok := err.(*goa.ServiceError); ok {
 		return &goapb.ErrorResponse{
-			Name:      gerr.Name,
-			Id:        gerr.ID,
-			Msg:       gerr.Message,
-			Timeout:   gerr.Timeout,
-			Temporary: gerr.Temporary,
-			Fault:     gerr.Fault,
+			Name:    gerr.Name,
+			Id:      gerr.ID,
+			Message: gerr.Message,
 		}
 	}
 	return NewErrorResponse(goa.Fault(err.Error()))
@@ -53,12 +44,9 @@ func NewErrorResponse(err error) *goapb.ErrorResponse {
 // message.
 func NewServiceError(resp *goapb.ErrorResponse) *goa.ServiceError {
 	return &goa.ServiceError{
-		Name:      resp.Name,
-		ID:        resp.Id,
-		Message:   resp.Msg,
-		Timeout:   resp.Timeout,
-		Temporary: resp.Temporary,
-		Fault:     resp.Fault,
+		Name:    resp.Name,
+		ID:      resp.Id,
+		Message: resp.Message,
 	}
 }
 
@@ -88,19 +76,15 @@ func EncodeError(err error) error {
 	if gerr, ok := err.(*goa.ServiceError); ok {
 		// goa service error type. Compute the status code from the service error
 		// characteristics and create a new detailed gRPC status error.
-		var code codes.Code
-		{
-			code = codes.Unknown
-			if gerr.Fault {
-				code = codes.Internal
-			}
-			if gerr.Timeout {
-				code = codes.DeadlineExceeded
-			}
-			if gerr.Temporary {
-				code = codes.Unavailable
-			}
+
+		name := gerr.Name
+		c, ok := GetCode(name)
+
+		var code = codes.Unknown
+		if ok {
+			code = c
 		}
+
 		return NewStatusError(code, err, NewErrorResponse(err))
 	}
 	// Return an unknown gRPC status error with fault characteristic set.

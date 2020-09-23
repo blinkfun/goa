@@ -128,3 +128,5 @@ release:
 		git push origin v$(MAJOR).$(MINOR).$(BUILD)
 	echo DONE RELEASING v$(MAJOR).$(MINOR).$(BUILD)!
 
+test-files:
+	find . -type f -name '*_test.go'

@@ -61,7 +61,7 @@ var (
 						"message": "Value of ID must be an integer",
 					},
 				}},
-				Validation: &ValidationExpr{Required: []string{"name", "id", "message", "temporary", "timeout", "fault"}},
+				Validation: &ValidationExpr{Required: []string{"name", "id", "message"}},
 			},
 			TypeName: "error",
 		},
@@ -85,18 +85,6 @@ var (
 			Type:         String,
 			Description:  "Message is a human-readable explanation specific to this occurrence of the problem.",
 			UserExamples: []*ExampleExpr{{Value: "parameter 'p' must be an integer"}},
-		}},
-		{"temporary", &AttributeExpr{
-			Type:        Boolean,
-			Description: "Is the error temporary?",
-		}},
-		{"timeout", &AttributeExpr{
-			Type:        Boolean,
-			Description: "Is the error a timeout?",
-		}},
-		{"fault", &AttributeExpr{
-			Type:        Boolean,
-			Description: "Is the error a server-side fault?",
 		}},
 	}
 

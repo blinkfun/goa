@@ -420,12 +420,6 @@ type ListSomethingWentWrongResponseBody struct {
 	// Message is a human-readable explanation specific to this occurrence of the
 	// problem.
 	Message *string ` + "`" + `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"` + "`" + `
-	// Is the error temporary?
-	Temporary *bool ` + "`" + `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"` + "`" + `
-	// Is the error a timeout?
-	Timeout *bool ` + "`" + `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"` + "`" + `
-	// Is the error a server-side fault?
-	Fault *bool ` + "`" + `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"` + "`" + `
 }
 
 // NewListStreamingBody builds the HTTP request body from the payload of the
@@ -452,12 +446,9 @@ func NewListResultOK(body *ListResponseBody) *servicea.ListResult {
 // something_went_wrong error.
 func NewListSomethingWentWrong(body *ListSomethingWentWrongResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
-		Name:      *body.Name,
-		ID:        *body.ID,
-		Message:   *body.Message,
-		Temporary: *body.Temporary,
-		Timeout:   *body.Timeout,
-		Fault:     *body.Fault,
+		Name:    *body.Name,
+		ID:      *body.ID,
+		Message: *body.Message,
 	}
 
 	return v
@@ -485,15 +476,6 @@ func ValidateListSomethingWentWrongResponseBody(body *ListSomethingWentWrongResp
 	}
 	if body.Message == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
-	}
-	if body.Temporary == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
-	}
-	if body.Timeout == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
-	}
-	if body.Fault == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
 	}
 	return
 }
@@ -521,12 +503,6 @@ type ListSomethingWentWrongResponseBody struct {
 	// Message is a human-readable explanation specific to this occurrence of the
 	// problem.
 	Message *string ` + "`" + `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"` + "`" + `
-	// Is the error temporary?
-	Temporary *bool ` + "`" + `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"` + "`" + `
-	// Is the error a timeout?
-	Timeout *bool ` + "`" + `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"` + "`" + `
-	// Is the error a server-side fault?
-	Fault *bool ` + "`" + `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"` + "`" + `
 }
 
 // NewListStreamingBody builds the HTTP request body from the payload of the
@@ -553,12 +529,9 @@ func NewListResultOK(body *ListResponseBody) *serviceb.ListResult {
 // something_went_wrong error.
 func NewListSomethingWentWrong(body *ListSomethingWentWrongResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
-		Name:      *body.Name,
-		ID:        *body.ID,
-		Message:   *body.Message,
-		Temporary: *body.Temporary,
-		Timeout:   *body.Timeout,
-		Fault:     *body.Fault,
+		Name:    *body.Name,
+		ID:      *body.ID,
+		Message: *body.Message,
 	}
 
 	return v
@@ -586,15 +559,6 @@ func ValidateListSomethingWentWrongResponseBody(body *ListSomethingWentWrongResp
 	}
 	if body.Message == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
-	}
-	if body.Temporary == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
-	}
-	if body.Timeout == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
-	}
-	if body.Fault == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
 	}
 	return
 }
