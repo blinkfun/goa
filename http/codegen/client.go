@@ -340,7 +340,7 @@ func (c *{{ .ClientStruct }}) {{ .EndpointInit }}({{ if .MultipartRequestEncoder
 		stream := &{{ .ClientWebSocket.VarName }}{conn: conn}
 		{{- if .Method.ViewedResult }}
 			{{- if not .Method.ViewedResult.ViewName }}
-		view := resp.Header.Get("goa-view")
+		view := resp.Header.Get("x-view")
 		stream.SetView(view)
 			{{- end }}
 		{{- end }}
@@ -640,7 +640,7 @@ func {{ .ResponseDecoder }}(decoder func(*http.Response) goahttp.Decoder, restor
 				{{- if $.Method.ViewedResult.ViewName }}
 			view := {{ printf "%q" $.Method.ViewedResult.ViewName }}
 				{{- else }}
-			view := resp.Header.Get("goa-view")
+			view := resp.Header.Get("x-view")
 				{{- end }}
 			vres := {{ if not $.Method.ViewedResult.IsCollection }}&{{ end }}{{ $.Method.ViewedResult.ViewsPkg}}.{{ $.Method.ViewedResult.VarName }}{Projected: p, View: view}
 				{{- if .ClientBody }}
@@ -674,7 +674,7 @@ func {{ .ResponseDecoder }}(decoder func(*http.Response) goahttp.Decoder, restor
 	{{- range .Errors }}
 		case {{ .StatusCode }}:
 		{{- if gt (len .Errors) 1 }}
-		en := resp.Header.Get("goa-error")
+		en := resp.Header.Get("x-error")
 		switch en {
 			{{- range .Errors }}
 		case {{ printf "%q" .Name }}:

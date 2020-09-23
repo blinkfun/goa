@@ -123,7 +123,7 @@ func (s *StreamingResultWithViewsMethodServerStream) Send(v *streamingresultwith
 	// before calling the actual service method which may call Send().
 	s.once.Do(func() {
 		respHdr := make(http.Header)
-		respHdr.Add("goa-view", s.view)
+		respHdr.Add("x-view", s.view)
 		var conn *websocket.Conn
 		conn, err = s.upgrader.Upgrade(s.w, s.r, respHdr)
 		if err != nil {
@@ -316,7 +316,7 @@ func (c *Client) StreamingResultWithViewsMethod() goa.Endpoint {
 			conn.Close()
 		}()
 		stream := &StreamingResultWithViewsMethodClientStream{conn: conn}
-		view := resp.Header.Get("goa-view")
+		view := resp.Header.Get("x-view")
 		stream.SetView(view)
 		return stream, nil
 	}
@@ -457,7 +457,7 @@ func (s *StreamingResultCollectionWithViewsMethodServerStream) Send(v streamingr
 	// before calling the actual service method which may call Send().
 	s.once.Do(func() {
 		respHdr := make(http.Header)
-		respHdr.Add("goa-view", s.view)
+		respHdr.Add("x-view", s.view)
 		var conn *websocket.Conn
 		conn, err = s.upgrader.Upgrade(s.w, s.r, respHdr)
 		if err != nil {
@@ -2398,7 +2398,7 @@ func (s *BidirectionalStreamingResultWithViewsMethodServerStream) Send(v *bidire
 	// before calling the actual service method which may call Send().
 	s.once.Do(func() {
 		respHdr := make(http.Header)
-		respHdr.Add("goa-view", s.view)
+		respHdr.Add("x-view", s.view)
 		var conn *websocket.Conn
 		conn, err = s.upgrader.Upgrade(s.w, s.r, respHdr)
 		if err != nil {
@@ -2649,7 +2649,7 @@ func (s *BidirectionalStreamingResultCollectionWithViewsMethodServerStream) Send
 	// before calling the actual service method which may call Send().
 	s.once.Do(func() {
 		respHdr := make(http.Header)
-		respHdr.Add("goa-view", s.view)
+		respHdr.Add("x-view", s.view)
 		var conn *websocket.Conn
 		conn, err = s.upgrader.Upgrade(s.w, s.r, respHdr)
 		if err != nil {

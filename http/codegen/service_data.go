@@ -299,7 +299,7 @@ type (
 		// ContentType contains the value of the response
 		// "Content-Type" header.
 		ContentType string
-		// ErrorHeader contains the value of the response "goa-error"
+		// ErrorHeader contains the value of the response "x-error"
 		// header if any.
 		ErrorHeader string
 		// ServerBody is the type of the response body used by server

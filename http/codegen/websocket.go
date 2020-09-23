@@ -666,7 +666,7 @@ func (s *{{ .VarName }}) {{ .RecvName }}() ({{ .RecvTypeRef }}, error) {
 	{{- if and .ViewedResult (eq .Function "Send") }}
 		{{- if not .ViewedResult.ViewName }}
 			respHdr := make(http.Header)
-			respHdr.Add("goa-view", s.view)
+			respHdr.Add("x-view", s.view)
 		{{- end }}
 	{{- end }}
 		var conn *websocket.Conn

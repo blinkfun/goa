@@ -1119,7 +1119,7 @@ func {{ .ResponseEncoder }}(encoder func(context.Context, http.ResponseWriter) g
 		{{- if .Method.ViewedResult }}
 			res := v.({{ .Method.ViewedResult.FullRef }})
 			{{- if not .Method.ViewedResult.ViewName }}
-				w.Header().Set("goa-view", res.View)
+				w.Header().Set("x-view", res.View)
 			{{- end }}
 		{{- else }}
 			res := v.({{ .Result.Ref }})
@@ -1300,7 +1300,7 @@ const responseT = `{{ define "response" -}}
 	{{- end }}
 
 	{{- if .ErrorHeader }}
-	w.Header().Set("goa-error", {{ printf "%q" .ErrorHeader }})
+	w.Header().Set("x-error", {{ printf "%q" .ErrorHeader }})
 	{{- end }}
 	w.WriteHeader({{ .StatusCode }})
 {{- end }}

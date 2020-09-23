@@ -20,7 +20,7 @@ func EncodeMethodPrimitiveErrorResponseError(encoder func(context.Context, http.
 			} else {
 				body = NewMethodPrimitiveErrorResponseBadRequestResponseBody(res)
 			}
-			w.Header().Set("goa-error", "bad_request")
+			w.Header().Set("x-error", "bad_request")
 			w.WriteHeader(http.StatusBadRequest)
 			return enc.Encode(body)
 		case "internal_error":
@@ -32,7 +32,7 @@ func EncodeMethodPrimitiveErrorResponseError(encoder func(context.Context, http.
 			} else {
 				body = NewMethodPrimitiveErrorResponseInternalErrorResponseBody(res)
 			}
-			w.Header().Set("goa-error", "internal_error")
+			w.Header().Set("x-error", "internal_error")
 			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
@@ -61,7 +61,7 @@ func EncodeMethodDefaultErrorResponseError(encoder func(context.Context, http.Re
 			} else {
 				body = NewMethodDefaultErrorResponseBadRequestResponseBody(res)
 			}
-			w.Header().Set("goa-error", "bad_request")
+			w.Header().Set("x-error", "bad_request")
 			w.WriteHeader(http.StatusBadRequest)
 			return enc.Encode(body)
 		default:
@@ -91,7 +91,7 @@ func EncodeMethodDefaultErrorResponseError(encoder func(context.Context, http.Re
 			} else {
 				body = NewMethodDefaultErrorResponseBadRequestResponseBody(res)
 			}
-			w.Header().Set("goa-error", "bad_request")
+			w.Header().Set("x-error", "bad_request")
 			w.WriteHeader(http.StatusBadRequest)
 			return enc.Encode(body)
 		default:
@@ -120,7 +120,7 @@ func EncodeMethodServiceErrorResponseError(encoder func(context.Context, http.Re
 			} else {
 				body = NewMethodServiceErrorResponseInternalErrorResponseBody(res)
 			}
-			w.Header().Set("goa-error", "internal_error")
+			w.Header().Set("x-error", "internal_error")
 			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		case "bad_request":
@@ -132,7 +132,7 @@ func EncodeMethodServiceErrorResponseError(encoder func(context.Context, http.Re
 			} else {
 				body = NewMethodServiceErrorResponseBadRequestResponseBody(res)
 			}
-			w.Header().Set("goa-error", "bad_request")
+			w.Header().Set("x-error", "bad_request")
 			w.WriteHeader(http.StatusBadRequest)
 			return enc.Encode(body)
 		default:
@@ -161,7 +161,7 @@ func EncodeMethodServiceErrorResponseError(encoder func(context.Context, http.Re
 			} else {
 				body = NewMethodServiceErrorResponseInternalErrorResponseBody(res)
 			}
-			w.Header().Set("goa-error", "internal_error")
+			w.Header().Set("x-error", "internal_error")
 			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		case "bad_request":
@@ -174,7 +174,7 @@ func EncodeMethodServiceErrorResponseError(encoder func(context.Context, http.Re
 			} else {
 				body = NewMethodServiceErrorResponseBadRequestResponseBody(res)
 			}
-			w.Header().Set("goa-error", "bad_request")
+			w.Header().Set("x-error", "bad_request")
 			w.WriteHeader(http.StatusBadRequest)
 			return enc.Encode(body)
 		default:
@@ -199,7 +199,7 @@ func EncodeMethodServiceErrorResponseError(encoder func(context.Context, http.Re
 			if res.Header != nil {
 				w.Header().Set("Header", *res.Header)
 			}
-			w.Header().Set("goa-error", "bad_request")
+			w.Header().Set("x-error", "bad_request")
 			w.WriteHeader(http.StatusBadRequest)
 			return nil
 		default:
@@ -225,7 +225,7 @@ func EncodeMethodServiceErrorResponseError(encoder func(context.Context, http.Re
 			if res.Header != nil {
 				w.Header().Set("Header", *res.Header)
 			}
-			w.Header().Set("goa-error", "bad_request")
+			w.Header().Set("x-error", "bad_request")
 			w.WriteHeader(http.StatusBadRequest)
 			return nil
 		default:

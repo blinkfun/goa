@@ -283,7 +283,7 @@ func Decode{{ .Method.VarName }}Response(ctx context.Context, v interface{}, hdr
 {{- if .ViewedResultRef }}
   var view string
   {
-    if vals := hdr.Get("goa-view"); len(vals) > 0 {
+    if vals := hdr.Get("x-view"); len(vals) > 0 {
       view = vals[0]
     }
   }

@@ -400,7 +400,7 @@ func Encode{{ .Method.VarName }}Response(ctx context.Context, v interface{}, hdr
 		return nil, goagrpc.ErrInvalidType("{{ .ServiceName }}", "{{ .Method.Name }}", "{{ .ViewedResultRef }}", v)
 	}
 	result := vres.Projected
-	(*hdr).Append("goa-view", vres.View)
+	(*hdr).Append("x-view", vres.View)
 {{- else if .ResultRef }}
 	result, ok := v.({{ .ResultRef }})
 	if !ok {
