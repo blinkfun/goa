@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/expr"
@@ -48,7 +49,7 @@ func protoFile(genpkg string, svc *expr.GRPCServiceExpr) *codegen.File {
 			Data: map[string]interface{}{
 				"ProtoVersion": ProtoVersion,
 				"Pkg":          codegen.SnakeCase(codegen.Goify(svcName, false)),
-				"Options":      protoOptions(meta),
+				"Options":      OptionsFromExpr(meta),
 			},
 		},
 		// service definition
@@ -82,8 +83,32 @@ func protoc(path string) error {
 	return nil
 }
 
-func protoOptions(meta expr.MetaExpr) []string {
-	return nil
+func OptionsFromExpr(mdata expr.MetaExpr) map[string]string {
+	return optionsFromExprWithPrefix(mdata, "rpc:option:")
+}
+
+func optionsFromExprWithPrefix(mdata expr.MetaExpr, prefix string) map[string]string {
+	if !strings.HasSuffix(prefix, ":") {
+		prefix += ":"
+	}
+	options := make(map[string]string)
+	for key, value := range mdata {
+		if !strings.HasPrefix(key, prefix) {
+			continue
+		}
+		name := key[len(prefix):]
+		if strings.Contains(name, ":") {
+			continue
+		}
+		if name == "go_package" {
+			continue
+		}
+		options[name] = value[0]
+	}
+	if len(options) == 0 {
+		return nil
+	}
+	return options
 }
 
 const (
@@ -103,6 +128,8 @@ syntax = {{ printf "%q" .ProtoVersion }};
 package {{ .Pkg }};
 
 option go_package = "{{ .Pkg }}pb";
+{{ range .Options }}
+{{- end }}
 `
 
 	// input: ServiceData
