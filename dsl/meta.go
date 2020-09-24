@@ -171,8 +171,6 @@ func Meta(name string, value ...string) {
 		e.Meta = appendMeta(e.Meta, name, value...)
 	case *expr.HTTPResponseExpr:
 		e.Meta = appendMeta(e.Meta, name, value...)
-	case *expr.GRPCServiceExpr:
-		e.Meta = appendMeta(e.Meta, name, value...)
 	case expr.CompositeExpr:
 		att := e.Attribute()
 		att.Meta = appendMeta(att.Meta, name, value...)

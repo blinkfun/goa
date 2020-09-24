@@ -504,6 +504,7 @@ func (d ServicesData) analyze(service *expr.ServiceExpr) *Data {
 				errorInits = append(errorInits, buildErrorInitData(er, scope))
 			}
 		}
+
 		for _, er := range service.Errors {
 			recordError(er)
 		}

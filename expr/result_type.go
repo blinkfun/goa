@@ -45,7 +45,7 @@ type (
 var (
 	// ErrorResultIdentifier is the result type identifier used for error
 	// responses.
-	ErrorResultIdentifier = "application/vnd.goa.error"
+	ErrorResultIdentifier = "application/vnd.common.error"
 
 	// ErrorResult is the built-in result type for error responses.
 	ErrorResult = &ResultTypeExpr{

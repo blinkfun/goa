@@ -3,22 +3,22 @@ package http
 import (
 	"net/http"
 
-	"goa.design/goa/v3/pkg"
+	goa "goa.design/goa/v3/pkg"
 )
 
 var registeredCode = make(map[string]int)
 
 func init() {
-	RegisterCode(goa.ErrNameMissingPayload, http.StatusBadRequest)
-	RegisterCode(goa.ErrNameDecodePayload, http.StatusBadRequest)
-	RegisterCode(goa.ErrNameInvalidFieldType, http.StatusBadRequest)
-	RegisterCode(goa.ErrNameMissingField, http.StatusBadRequest)
-	RegisterCode(goa.ErrNameInvalidEnumValue, http.StatusBadRequest)
-	RegisterCode(goa.ErrNameInvalidFormat, http.StatusBadRequest)
-	RegisterCode(goa.ErrNameInvalidPattern, http.StatusBadRequest)
-	RegisterCode(goa.ErrNameInvalidRange, http.StatusBadRequest)
-	RegisterCode(goa.ErrNameInvalidLength, http.StatusBadRequest)
-	RegisterCode(goa.ErrNameFault, http.StatusServiceUnavailable)
+	registeredCode[goa.ErrNameDecodePayload] = http.StatusBadRequest
+	registeredCode[goa.ErrNameInvalidFieldType] = http.StatusBadRequest
+	registeredCode[goa.ErrNameInvalidEnumValue] = http.StatusBadRequest
+	registeredCode[goa.ErrNameInvalidFormat] = http.StatusBadRequest
+	registeredCode[goa.ErrNameInvalidPattern] = http.StatusBadRequest
+	registeredCode[goa.ErrNameInvalidRange] = http.StatusBadRequest
+	registeredCode[goa.ErrNameInvalidLength] = http.StatusBadRequest
+	registeredCode[goa.ErrNameMissingField] = http.StatusBadRequest
+	registeredCode[goa.ErrNameMissingPayload] = http.StatusBadRequest
+	registeredCode[goa.ErrNameFault] = http.StatusServiceUnavailable
 }
 
 func RegisterCode(name string, code int) {

@@ -38,10 +38,13 @@ type Generator struct {
 
 	// tmpDir is the temporary directory used to compile the generator.
 	tmpDir string
+
+	// genDir is the directory for generated codes
+	genDir string
 }
 
 // NewGenerator creates a Generator.
-func NewGenerator(cmd string, path, output string) *Generator {
+func NewGenerator(cmd string, path, output, gen string) *Generator {
 	bin := "goa"
 	if runtime.GOOS == "windows" {
 		bin += ".exe"
@@ -83,6 +86,7 @@ func NewGenerator(cmd string, path, output string) *Generator {
 		Output:        output,
 		DesignVersion: version,
 		bin:           bin,
+		genDir:        gen,
 	}
 }
 
@@ -108,6 +112,7 @@ func (g *Generator) Write(debug bool) error {
 			"Command":       g.Command,
 			"CleanupDirs":   cleanupDirs(g.Command, g.Output),
 			"DesignVersion": g.DesignVersion,
+			"GenDir":        g.genDir,
 		}
 		ver := ""
 		if g.DesignVersion > 2 {
@@ -283,6 +288,9 @@ const mainT = `func main() {
 	if err := os.RemoveAll({{ printf "%q" . }}); err != nil {
 		fail(err.Error())
 	}
+{{- end }}
+{{- if .GenDir }}
+	codegen.Gendir = "{{ .GenDir }}"
 {{- end }}
 {{- if gt .DesignVersion 2 }}
 	codegen.DesignVersion = ver

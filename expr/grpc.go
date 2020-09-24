@@ -28,6 +28,7 @@ func (g *GRPCExpr) ServiceFor(s *ServiceExpr) *GRPCServiceExpr {
 	}
 	res := &GRPCServiceExpr{
 		ServiceExpr: s,
+		Meta:        s.Meta,
 	}
 	g.Services = append(g.Services, res)
 	return res

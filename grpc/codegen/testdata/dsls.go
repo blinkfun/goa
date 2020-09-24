@@ -21,6 +21,10 @@ var UnaryRPCsDSL = func() {
 		})
 	})
 	Service("ServiceUnaryRPCs", func() {
+		Meta("rpc:option:ruby_package", "GoogleAds::V3::Services")
+		Meta("rpc:option:java_package", "com.abc")
+		Meta("rpc:option:php_namespace", "hello")
+
 		Method("MethodUnaryRPCA", func() {
 			Payload(PayloadA)
 			Result(ResultT)

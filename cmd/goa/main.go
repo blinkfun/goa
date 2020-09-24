@@ -8,7 +8,6 @@ import (
 
 	"flag"
 
-	"goa.design/goa/v3/codegen"
 	goa "goa.design/goa/v3/pkg"
 )
 
@@ -78,23 +77,18 @@ var (
 	gen   = generate
 )
 
-func generate(cmd, path, output, gendir string, debug bool) {
+func generate(cmd, path, output, gen string, debug bool) {
 	var (
 		files []string
 		err   error
 		tmp   *Generator
 	)
 
-	if len(gendir) > 0 {
-		codegen.Gendir = gendir
-		fmt.Printf("The gen directory is: %s\n", gendir)
-	}
-
 	if _, err = build.Import(path, ".", 0); err != nil {
 		goto fail
 	}
 
-	tmp = NewGenerator(cmd, path, output)
+	tmp = NewGenerator(cmd, path, output, gen)
 	if !debug {
 		defer tmp.Remove()
 	}

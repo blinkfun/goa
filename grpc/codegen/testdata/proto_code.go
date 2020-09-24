@@ -6,6 +6,9 @@ syntax = "proto3";
 package service_unary_rp_cs;
 
 option go_package = "service_unary_rp_cspb";
+option java_package = "com.abc";
+option php_namespace = "hello";
+option ruby_package = "GoogleAds::V3::Services";
 
 // Service is the ServiceUnaryRPCs service interface.
 service ServiceUnaryRPCs {

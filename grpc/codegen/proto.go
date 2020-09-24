@@ -31,6 +31,7 @@ func protoFile(genpkg string, svc *expr.GRPCServiceExpr) *codegen.File {
 	svcName := codegen.SnakeCase(data.Service.VarName)
 	path := filepath.Join(codegen.Gendir, "grpc", svcName, pbPkgName, svcName+".proto")
 	meta := svc.Meta
+	pkg := codegen.SnakeCase(codegen.Goify(svcName, false))
 
 	sections := []*codegen.SectionTemplate{
 		// header comments
@@ -48,8 +49,8 @@ func protoFile(genpkg string, svc *expr.GRPCServiceExpr) *codegen.File {
 			Source: protoStartT,
 			Data: map[string]interface{}{
 				"ProtoVersion": ProtoVersion,
-				"Pkg":          codegen.SnakeCase(codegen.Goify(svcName, false)),
-				"Options":      OptionsFromExpr(meta),
+				"Pkg":          pkg,
+				"Options":      OptionsFromExpr(pkg, meta),
 			},
 		},
 		// service definition
@@ -83,15 +84,16 @@ func protoc(path string) error {
 	return nil
 }
 
-func OptionsFromExpr(mdata expr.MetaExpr) map[string]string {
-	return optionsFromExprWithPrefix(mdata, "rpc:option:")
+func OptionsFromExpr(pkg string, mdata expr.MetaExpr) map[string]string {
+	return optionsFromExprWithPrefix(pkg, mdata, "rpc:option:")
 }
 
-func optionsFromExprWithPrefix(mdata expr.MetaExpr, prefix string) map[string]string {
+func optionsFromExprWithPrefix(pkg string, mdata expr.MetaExpr, prefix string) map[string]string {
 	if !strings.HasSuffix(prefix, ":") {
 		prefix += ":"
 	}
 	options := make(map[string]string)
+	options["go_package"] = pkg + "pb"
 	for key, value := range mdata {
 		if !strings.HasPrefix(key, prefix) {
 			continue
@@ -100,13 +102,12 @@ func optionsFromExprWithPrefix(mdata expr.MetaExpr, prefix string) map[string]st
 		if strings.Contains(name, ":") {
 			continue
 		}
-		if name == "go_package" {
+		val := value[0]
+		if !validOption(name, val) {
 			continue
 		}
-		options[name] = value[0]
-	}
-	if len(options) == 0 {
-		return nil
+
+		options[name] = val
 	}
 	return options
 }
@@ -126,9 +127,10 @@ const (
 syntax = {{ printf "%q" .ProtoVersion }};
 
 package {{ .Pkg }};
-
-option go_package = "{{ .Pkg }}pb";
-{{ range .Options }}
+{{ if .Options }}
+	{{- range $key, $value := .Options }}
+option {{ $key }} = "{{ $value }}";
+	{{- end }}
 {{- end }}
 `
 

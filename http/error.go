@@ -19,6 +19,10 @@ type (
 		Message string `json:"message" xml:"message" form:"message"`
 	}
 
+	// ErrorResponseBody is defined for default error result,
+	// the fields are the same with ErrorResponse
+	ErrorResponseBody = ErrorResponse
+
 	// Statuser is implemented by error response object to provide the response
 	// HTTP status code.
 	Statuser interface {
