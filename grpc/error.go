@@ -33,7 +33,7 @@ func NewErrorResponse(err error) *goapb.ErrorResponse {
 	if gerr, ok := err.(*goa.ServiceError); ok {
 		return &goapb.ErrorResponse{
 			Name:    gerr.Name,
-			Id:      gerr.ID,
+			ID:      gerr.ID,
 			Message: gerr.Message,
 		}
 	}
@@ -45,7 +45,7 @@ func NewErrorResponse(err error) *goapb.ErrorResponse {
 func NewServiceError(resp *goapb.ErrorResponse) *goa.ServiceError {
 	return &goa.ServiceError{
 		Name:    resp.Name,
-		ID:      resp.Id,
+		ID:      resp.ID,
 		Message: resp.Message,
 	}
 }

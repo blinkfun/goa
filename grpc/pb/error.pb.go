@@ -28,7 +28,7 @@ type ErrorResponse struct {
 	// name is the name for that class of errors.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// id is the unique error instance identifier.
-	Id string `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	ID string `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
 	// msg describes the specific error occurrence.
 	Message              string   `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -68,9 +68,9 @@ func (m *ErrorResponse) GetName() string {
 	return ""
 }
 
-func (m *ErrorResponse) GetId() string {
+func (m *ErrorResponse) GetID() string {
 	if m != nil {
-		return m.Id
+		return m.ID
 	}
 	return ""
 }
