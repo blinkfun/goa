@@ -18,7 +18,7 @@ require (
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
 	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
 	golang.org/x/text v0.3.3 // indirect
-	golang.org/x/tools v0.0.0-20200923182640-463111b69878
+	golang.org/x/tools v0.0.0-20200924224222-8d73f17870ce
 	google.golang.org/genproto v0.0.0-20200711021454-869866162049 // indirect
 	google.golang.org/grpc v1.32.0
 	google.golang.org/protobuf v1.25.0 // indirect
