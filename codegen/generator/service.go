@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"context"
 	"fmt"
 
 	"goa.design/goa/v3/codegen"
@@ -9,10 +10,12 @@ import (
 	"goa.design/goa/v3/expr"
 )
 
+type IncludeClientFile struct{}
+
 // Service iterates through the roots and returns the files needed to render
 // the service code. It returns an error if the roots slice does not include
 // a goa design.
-func Service(genpkg string, roots []eval.Root) ([]*codegen.File, error) {
+func Service(ctx context.Context, genpkg string, roots []eval.Root) ([]*codegen.File, error) {
 	var files []*codegen.File
 	for _, root := range roots {
 		switch r := root.(type) {
@@ -22,7 +25,9 @@ func Service(genpkg string, roots []eval.Root) ([]*codegen.File, error) {
 				// properly initialized.
 				files = append(files, service.File(genpkg, s))
 				files = append(files, service.EndpointFile(genpkg, s))
-				files = append(files, service.ClientFile(s))
+				if v, ok := ctx.Value(IncludeClientFile{}).(bool); ok && v {
+					files = append(files, service.ClientFile(s))
+				}
 				if f := service.ViewsFile(genpkg, s); f != nil {
 					files = append(files, f)
 				}

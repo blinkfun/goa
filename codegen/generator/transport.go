@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"context"
 	"fmt"
 
 	"goa.design/goa/v3/codegen"
@@ -11,7 +12,7 @@ import (
 	httpcodegen "goa.design/goa/v3/http/codegen"
 )
 
-func ClientTransport(genpkg string, roots []eval.Root) ([]*codegen.File, error) {
+func ClientTransport(ctx context.Context, genpkg string, roots []eval.Root) ([]*codegen.File, error) {
 	var files []*codegen.File
 	for _, root := range roots {
 		r, ok := root.(*expr.RootExpr)
@@ -44,7 +45,7 @@ func ClientTransport(genpkg string, roots []eval.Root) ([]*codegen.File, error) 
 	return files, nil
 }
 
-func ServerTransport(genpkg string, roots []eval.Root) ([]*codegen.File, error) {
+func ServerTransport(ctx context.Context, genpkg string, roots []eval.Root) ([]*codegen.File, error) {
 	var files []*codegen.File
 	for _, root := range roots {
 		r, ok := root.(*expr.RootExpr)
@@ -79,7 +80,7 @@ func ServerTransport(genpkg string, roots []eval.Root) ([]*codegen.File, error) 
 // Transport iterates through the roots and returns the files needed to render
 // the transport code. It returns an error if the roots slice does not include
 // at least one transport design.
-func Transport(genpkg string, roots []eval.Root) ([]*codegen.File, error) {
+func Transport(ctx context.Context, genpkg string, roots []eval.Root) ([]*codegen.File, error) {
 	var files []*codegen.File
 	for _, root := range roots {
 		r, ok := root.(*expr.RootExpr)

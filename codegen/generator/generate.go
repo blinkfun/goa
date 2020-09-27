@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"context"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -78,8 +79,12 @@ func Generate(dir, cmd string) (outputs []string, err1 error) {
 
 	// 5. Generate initial set of files produced by goa code generators.
 	var genfiles []*codegen.File
+	var ctx = context.Background()
+	if cmd == "gen-server" {
+		ctx = context.WithValue(context.Background(), IncludeClientFile{}, false)
+	}
 	for _, gen := range genfuncs {
-		fs, err := gen(genpkg, roots)
+		fs, err := gen(ctx, genpkg, roots)
 		if err != nil {
 			return nil, err
 		}

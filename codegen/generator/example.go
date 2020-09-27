@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"context"
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/example"
 	"goa.design/goa/v3/codegen/service"
@@ -12,7 +13,7 @@ import (
 
 // Example iterates through the roots and returns files that implement an
 // example service, server, and client.
-func Example(genpkg string, roots []eval.Root) ([]*codegen.File, error) {
+func Example(_ context.Context, genpkg string, roots []eval.Root) ([]*codegen.File, error) {
 	var files []*codegen.File
 	for _, root := range roots {
 		r, ok := root.(*expr.RootExpr)
