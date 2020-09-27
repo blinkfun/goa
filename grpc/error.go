@@ -24,6 +24,10 @@ type (
 	}
 )
 
+var (
+	DefaultCode = codes.Unknown
+)
+
 // NewErrorResponse creates a new ErrorResponse protocol buffer message from
 // the given error. If the given error is a goa ServiceError, the ErrorResponse
 // message will be set with the corresponding Timeout, Temporary, and Fault
@@ -86,7 +90,7 @@ func EncodeError(err error) error {
 		return NewStatusError(code, err, NewErrorResponse(err))
 	}
 	// Return an unknown gRPC status error with fault characteristic set.
-	return NewStatusError(codes.Unknown, err, NewErrorResponse(err))
+	return NewStatusError(DefaultCode, err, NewErrorResponse(err))
 }
 
 // DecodeError returns the error message encoded in the status details if error

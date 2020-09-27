@@ -16,8 +16,10 @@ func init() {
 	registeredCode[goa.ErrNameInvalidPattern] = http.StatusBadRequest
 	registeredCode[goa.ErrNameInvalidRange] = http.StatusBadRequest
 	registeredCode[goa.ErrNameInvalidLength] = http.StatusBadRequest
+	registeredCode[goa.ErrNameInvalidType] = http.StatusBadRequest
 	registeredCode[goa.ErrNameMissingField] = http.StatusBadRequest
 	registeredCode[goa.ErrNameMissingPayload] = http.StatusBadRequest
+	registeredCode[goa.ErrNameError] = http.StatusInternalServerError
 	registeredCode[goa.ErrNameFault] = http.StatusServiceUnavailable
 }
 

@@ -24,7 +24,7 @@ type (
 // Fault creates an error given a format and values a la fmt.Printf. The error
 // has the Fault field set to true.
 func Fault(format string, v ...interface{}) *ServiceError {
-	return newError("fault", format, v...)
+	return newError(ErrNameFault, format, v...)
 }
 
 // PermanentError creates an error given a name and a format and values a la
@@ -57,25 +57,25 @@ func TemporaryTimeoutError(name, format string, v ...interface{}) *ServiceError 
 // MissingPayloadError is the error produced by the generated code when a
 // request is missing a required payload.
 func MissingPayloadError() error {
-	return PermanentError("missing_payload", "missing required payload")
+	return PermanentError(ErrNameMissingPayload, "missing required payload")
 }
 
 // DecodePayloadError is the error produced by the generated code when a request
 // body cannot be decoded successfully.
 func DecodePayloadError(msg string) error {
-	return PermanentError("decode_payload", msg)
+	return PermanentError(ErrNameDecodePayload, msg)
 }
 
 // InvalidFieldTypeError is the error produced by the generated code when the
 // type of a payload field does not match the type defined in the design.
 func InvalidFieldTypeError(name string, val interface{}, expected string) error {
-	return PermanentError("invalid_field_type", "invalid value %#v for %q, must be a %s", val, name, expected)
+	return PermanentError(ErrNameInvalidFieldType, "invalid value %#v for %q, must be a %s", val, name, expected)
 }
 
 // MissingFieldError is the error produced by the generated code when a payload
 // is missing a required field.
 func MissingFieldError(name, context string) error {
-	return PermanentError("missing_field", "%q is missing from %s", name, context)
+	return PermanentError(ErrNameMissingField, "%q is missing from %s", name, context)
 }
 
 // InvalidEnumValueError is the error produced by the generated code when the
@@ -86,21 +86,21 @@ func InvalidEnumValueError(name string, val interface{}, allowed []interface{}) 
 	for i, a := range allowed {
 		elems[i] = fmt.Sprintf("%#v", a)
 	}
-	return PermanentError("invalid_enum_value", "value of %s must be one of %s but got value %#v", name, strings.Join(elems, ", "), val)
+	return PermanentError(ErrNameInvalidEnumValue, "value of %s must be one of %s but got value %#v", name, strings.Join(elems, ", "), val)
 }
 
 // InvalidFormatError is the error produced by the generated code when the value
 // of a payload field does not match the format validation defined in the
 // design.
 func InvalidFormatError(name, target string, format Format, formatError error) error {
-	return PermanentError("invalid_format", "%s must be formatted as a %s but got value %q, %s", name, format, target, formatError.Error())
+	return PermanentError(ErrNameInvalidFormat, "%s must be formatted as a %s but got value %q, %s", name, format, target, formatError.Error())
 }
 
 // InvalidPatternError is the error produced by the generated code when the
 // value of a payload field does not match the pattern validation defined in the
 // design.
 func InvalidPatternError(name, target string, pattern string) error {
-	return PermanentError("invalid_pattern", "%s must match the regexp %q but got value %q", name, pattern, target)
+	return PermanentError(ErrNameInvalidPattern, "%s must match the regexp %q but got value %q", name, pattern, target)
 }
 
 // InvalidRangeError is the error produced by the generated code when the value
@@ -111,7 +111,7 @@ func InvalidRangeError(name string, target interface{}, value interface{}, min b
 	if !min {
 		comp = "lesser or equal"
 	}
-	return PermanentError("invalid_range", "%s must be %s than %d but got value %#v", name, comp, value, target)
+	return PermanentError(ErrNameInvalidRange, "%s must be %s than %d but got value %#v", name, comp, value, target)
 }
 
 // InvalidLengthError is the error produced by the generated code when the value
@@ -122,7 +122,7 @@ func InvalidLengthError(name string, target interface{}, ln, value int, min bool
 	if !min {
 		comp = "lesser or equal"
 	}
-	return PermanentError("invalid_length", "length of %s must be %s than %d but got value %#v (len=%d)", name, comp, value, target, ln)
+	return PermanentError(ErrNameInvalidLength, "length of %s must be %s than %d but got value %#v (len=%d)", name, comp, value, target, ln)
 }
 
 // NewErrorID creates a unique 8 character ID that is well suited to use as an
@@ -161,7 +161,7 @@ func MergeErrors(err, other error) error {
 	}
 	e := asError(err)
 	o := asError(other)
-	if e.Name == "error" {
+	if e.Name == ErrNameError {
 		e.Name = o.Name
 	}
 	e.Message = e.Message + "; " + o.Message
@@ -187,7 +187,7 @@ func asError(err error) *ServiceError {
 	e, ok := err.(*ServiceError)
 	if !ok {
 		return &ServiceError{
-			Name:    "error",
+			Name:    ErrNameError,
 			ID:      NewErrorID(),
 			Message: err.Error(),
 		}

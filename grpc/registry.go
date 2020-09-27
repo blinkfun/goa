@@ -15,8 +15,10 @@ func init() {
 	registeredCode[goa.ErrNameInvalidPattern] = codes.InvalidArgument
 	registeredCode[goa.ErrNameInvalidRange] = codes.InvalidArgument
 	registeredCode[goa.ErrNameInvalidLength] = codes.InvalidArgument
+	registeredCode[goa.ErrNameInvalidType] = codes.InvalidArgument
 	registeredCode[goa.ErrNameMissingField] = codes.InvalidArgument
 	registeredCode[goa.ErrNameMissingPayload] = codes.InvalidArgument
+	registeredCode[goa.ErrNameError] = codes.Internal
 	registeredCode[goa.ErrNameFault] = codes.Unavailable
 }
 

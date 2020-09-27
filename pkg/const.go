@@ -2,26 +2,34 @@ package goa
 
 // Error names are for internal use and can not be overridden by RegisterCode
 const (
-	ErrNameMissingPayload   = "missing_payload"
+	// Client side codes
 	ErrNameDecodePayload    = "decode_payload"
-	ErrNameInvalidFieldType = "invalid_field_type"
-	ErrNameMissingField     = "missing_field"
 	ErrNameInvalidEnumValue = "invalid_enum_value"
+	ErrNameInvalidFieldType = "invalid_field_type"
 	ErrNameInvalidFormat    = "invalid_format"
+	ErrNameInvalidLength    = "invalid_length"
 	ErrNameInvalidPattern   = "invalid_pattern"
 	ErrNameInvalidRange     = "invalid_range"
-	ErrNameInvalidLength    = "invalid_length"
-	ErrNameFault            = "fault"
+	ErrNameInvalidType      = "invalid_type"
+	ErrNameMissingField     = "missing_field"
+	ErrNameMissingPayload   = "missing_payload"
+	// Server side codes
+	ErrNameError = "error"
+	ErrNameFault = "fault"
 )
 
 var ReservedErrNames = []string{
-	ErrNameMissingPayload,
+	// Client side codes
 	ErrNameDecodePayload,
-	ErrNameInvalidFieldType,
-	ErrNameMissingField,
 	ErrNameInvalidEnumValue,
+	ErrNameInvalidFieldType,
 	ErrNameInvalidFormat,
-	ErrNameInvalidPattern,
 	ErrNameInvalidLength,
+	ErrNameInvalidPattern,
+	ErrNameInvalidRange,
+	ErrNameInvalidType,
+	ErrNameMissingField,
+	ErrNameMissingPayload,
+	// Server side codes
 	ErrNameFault,
 }

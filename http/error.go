@@ -32,6 +32,10 @@ type (
 	}
 )
 
+var (
+	DefaultStatusCode = http.StatusInternalServerError
+)
+
 // NewErrorResponse creates a HTTP response from the given error.
 func NewErrorResponse(err error) Statuser {
 	if gerr, ok := err.(*goa.ServiceError); ok {
@@ -53,5 +57,5 @@ func (resp *ErrorResponse) StatusCode() int {
 	if ok {
 		return value
 	}
-	return http.StatusInternalServerError
+	return DefaultStatusCode
 }

@@ -2,6 +2,7 @@ package generator
 
 import (
 	"context"
+
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/example"
 	"goa.design/goa/v3/codegen/service"
