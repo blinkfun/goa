@@ -245,6 +245,12 @@ const ServiceName = {{ printf "%q" .Name }}
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [{{ len .Methods }}]string{ {{ range .Methods }}{{ printf "%q" .Name }}, {{ end }} }
+
+{{ range .Methods }}
+// MethodName{{ .VarName }} is the method name for {{ printf "%q" .Name }}
+var MethodName{{ .VarName }} = {{ printf "%q" .Name }}
+{{- end }}
+
 {{- range .Methods }}
 	{{- if .ServerStream }}
 		{{ template "stream_interface" (streamInterfaceFor "server" . .ServerStream) }}

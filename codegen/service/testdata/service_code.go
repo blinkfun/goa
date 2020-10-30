@@ -17,6 +17,9 @@ const ServiceName = "Service With Spaces"
 // MethodKey key.
 var MethodNames = [1]string{"Method With Spaces"}
 
+// MethodNameMethodWithSpaces is the method name for "Method With Spaces"
+var MethodNameMethodWithSpaces = "Method With Spaces"
+
 // PayloadWithSpace is the payload type of the Service With Spaces service
 // Method With Spaces method.
 type PayloadWithSpace struct {
@@ -78,6 +81,9 @@ const ServiceName = "SingleMethod"
 // MethodKey key.
 var MethodNames = [1]string{"A"}
 
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
 // APayload is the payload type of the SingleMethod service A method.
 type APayload struct {
 	IntField      int
@@ -115,6 +121,12 @@ const ServiceName = "MultipleMethods"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [2]string{"A", "B"}
+
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
+// MethodNameB is the method name for "B"
+var MethodNameB = "B"
 
 // APayload is the payload type of the MultipleMethods service A method.
 type APayload struct {
@@ -182,6 +194,9 @@ const ServiceName = "WithDefault"
 // MethodKey key.
 var MethodNames = [1]string{"A"}
 
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
 // APayload is the payload type of the WithDefault service A method.
 type APayload struct {
 	IntField      int
@@ -215,6 +230,9 @@ const ServiceName = "Empty"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"Empty"}
+
+// MethodNameEmpty is the method name for "Empty"
+var MethodNameEmpty = "Empty"
 `
 
 const EmptyResultMethod = `
@@ -233,6 +251,9 @@ const ServiceName = "EmptyResult"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"EmptyResult"}
+
+// MethodNameEmptyResult is the method name for "EmptyResult"
+var MethodNameEmptyResult = "EmptyResult"
 
 // APayload is the payload type of the EmptyResult service EmptyResult method.
 type APayload struct {
@@ -261,6 +282,9 @@ const ServiceName = "EmptyPayload"
 // MethodKey key.
 var MethodNames = [1]string{"EmptyPayload"}
 
+// MethodNameEmptyPayload is the method name for "EmptyPayload"
+var MethodNameEmptyPayload = "EmptyPayload"
+
 // AResult is the result type of the EmptyPayload service EmptyPayload method.
 type AResult struct {
 	IntField      int
@@ -288,6 +312,9 @@ const ServiceName = "ServiceError"
 // MethodKey key.
 var MethodNames = [1]string{"A"}
 
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
 // MakeError builds a goa.ServiceError from an error.
 func MakeError(err error) *goa.ServiceError {
 	return &goa.ServiceError{
@@ -314,6 +341,9 @@ const ServiceName = "CustomErrors"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"A"}
+
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
 
 // primitive error description
 type Primitive string
@@ -379,6 +409,9 @@ const ServiceName = "CustomErrorsCustomFields"
 // MethodKey key.
 var MethodNames = [1]string{"A"}
 
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
 type GoaError struct {
 	ErrorCode string
 }
@@ -415,6 +448,12 @@ const ServiceName = "MultipleMethodsResultMultipleViews"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [2]string{"A", "B"}
+
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
+// MethodNameB is the method name for "B"
+var MethodNameB = "B"
 
 // APayload is the payload type of the MultipleMethodsResultMultipleViews
 // service A method.
@@ -559,6 +598,9 @@ const ServiceName = "ResultCollectionMultipleViewsMethod"
 // MethodKey key.
 var MethodNames = [1]string{"A"}
 
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
 // MultipleViewsCollection is the result type of the
 // ResultCollectionMultipleViewsMethod service A method.
 type MultipleViewsCollection []*MultipleViews
@@ -700,6 +742,9 @@ const ServiceName = "ResultWithOtherResult"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"A"}
+
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
 
 // MultipleViews is the result type of the ResultWithOtherResult service A
 // method.
@@ -850,6 +895,9 @@ const ServiceName = "ResultWithResultTypeCollection"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"A"}
+
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
 
 // RT is the result type of the ResultWithResultTypeCollection service A method.
 type RT struct {
@@ -1098,6 +1146,12 @@ const ServiceName = "ResultWithDashedMimeType"
 // MethodKey key.
 var MethodNames = [2]string{"A", "list"}
 
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
+// MethodNameList is the method name for "list"
+var MethodNameList = "list"
+
 // ApplicationDashedType is the result type of the ResultWithDashedMimeType
 // service A method.
 type ApplicationDashedType struct {
@@ -1162,6 +1216,9 @@ const ServiceName = "ForceGenerateType"
 // MethodKey key.
 var MethodNames = [1]string{"A"}
 
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
 type ForcedType struct {
 	A *string
 }
@@ -1184,6 +1241,9 @@ const ServiceName = "ForceGenerateTypeExplicit"
 // MethodKey key.
 var MethodNames = [1]string{"A"}
 
+// MethodNameA is the method name for "A"
+var MethodNameA = "A"
+
 type ForcedType struct {
 	A *string
 }
@@ -1205,6 +1265,9 @@ const ServiceName = "StreamingResultService"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"StreamingResultMethod"}
+
+// MethodNameStreamingResultMethod is the method name for "StreamingResultMethod"
+var MethodNameStreamingResultMethod = "StreamingResultMethod"
 
 // StreamingResultMethodServerStream is the interface a "StreamingResultMethod"
 // endpoint server stream must satisfy.
@@ -1262,6 +1325,9 @@ const ServiceName = "StreamingResultWithViewsService"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"StreamingResultWithViewsMethod"}
+
+// MethodNameStreamingResultWithViewsMethod is the method name for "StreamingResultWithViewsMethod"
+var MethodNameStreamingResultWithViewsMethod = "StreamingResultWithViewsMethod"
 
 // StreamingResultWithViewsMethodServerStream is the interface a
 // "StreamingResultWithViewsMethod" endpoint server stream must satisfy.
@@ -1373,6 +1439,9 @@ const ServiceName = "StreamingResultWithExplicitViewService"
 // MethodKey key.
 var MethodNames = [1]string{"StreamingResultWithExplicitViewMethod"}
 
+// MethodNameStreamingResultWithExplicitViewMethod is the method name for "StreamingResultWithExplicitViewMethod"
+var MethodNameStreamingResultWithExplicitViewMethod = "StreamingResultWithExplicitViewMethod"
+
 // StreamingResultWithExplicitViewMethodServerStream is the interface a
 // "StreamingResultWithExplicitViewMethod" endpoint server stream must satisfy.
 type StreamingResultWithExplicitViewMethodServerStream interface {
@@ -1481,6 +1550,9 @@ const ServiceName = "StreamingResultNoPayloadService"
 // MethodKey key.
 var MethodNames = [1]string{"StreamingResultNoPayloadMethod"}
 
+// MethodNameStreamingResultNoPayloadMethod is the method name for "StreamingResultNoPayloadMethod"
+var MethodNameStreamingResultNoPayloadMethod = "StreamingResultNoPayloadMethod"
+
 // StreamingResultNoPayloadMethodServerStream is the interface a
 // "StreamingResultNoPayloadMethod" endpoint server stream must satisfy.
 type StreamingResultNoPayloadMethodServerStream interface {
@@ -1524,6 +1596,9 @@ const ServiceName = "StreamingPayloadService"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"StreamingPayloadMethod"}
+
+// MethodNameStreamingPayloadMethod is the method name for "StreamingPayloadMethod"
+var MethodNameStreamingPayloadMethod = "StreamingPayloadMethod"
 
 // StreamingPayloadMethodServerStream is the interface a
 // "StreamingPayloadMethod" endpoint server stream must satisfy.
@@ -1602,6 +1677,9 @@ const ServiceName = "StreamingPayloadNoPayloadService"
 // MethodKey key.
 var MethodNames = [1]string{"StreamingPayloadNoPayloadMethod"}
 
+// MethodNameStreamingPayloadNoPayloadMethod is the method name for "StreamingPayloadNoPayloadMethod"
+var MethodNameStreamingPayloadNoPayloadMethod = "StreamingPayloadNoPayloadMethod"
+
 // StreamingPayloadNoPayloadMethodServerStream is the interface a
 // "StreamingPayloadNoPayloadMethod" endpoint server stream must satisfy.
 type StreamingPayloadNoPayloadMethodServerStream interface {
@@ -1638,6 +1716,9 @@ const ServiceName = "StreamingPayloadNoResultService"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"StreamingPayloadNoResultMethod"}
+
+// MethodNameStreamingPayloadNoResultMethod is the method name for "StreamingPayloadNoResultMethod"
+var MethodNameStreamingPayloadNoResultMethod = "StreamingPayloadNoResultMethod"
 
 // StreamingPayloadNoResultMethodServerStream is the interface a
 // "StreamingPayloadNoResultMethod" endpoint server stream must satisfy.
@@ -1678,6 +1759,9 @@ const ServiceName = "StreamingPayloadResultWithViewsService"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"StreamingPayloadResultWithViewsMethod"}
+
+// MethodNameStreamingPayloadResultWithViewsMethod is the method name for "StreamingPayloadResultWithViewsMethod"
+var MethodNameStreamingPayloadResultWithViewsMethod = "StreamingPayloadResultWithViewsMethod"
 
 // StreamingPayloadResultWithViewsMethodServerStream is the interface a
 // "StreamingPayloadResultWithViewsMethod" endpoint server stream must satisfy.
@@ -1805,6 +1889,9 @@ const ServiceName = "StreamingPayloadResultWithExplicitViewService"
 // MethodKey key.
 var MethodNames = [1]string{"StreamingPayloadResultWithExplicitViewMethod"}
 
+// MethodNameStreamingPayloadResultWithExplicitViewMethod is the method name for "StreamingPayloadResultWithExplicitViewMethod"
+var MethodNameStreamingPayloadResultWithExplicitViewMethod = "StreamingPayloadResultWithExplicitViewMethod"
+
 // StreamingPayloadResultWithExplicitViewMethodServerStream is the interface a
 // "StreamingPayloadResultWithExplicitViewMethod" endpoint server stream must
 // satisfy.
@@ -1918,6 +2005,9 @@ const ServiceName = "BidirectionalStreamingService"
 // MethodKey key.
 var MethodNames = [1]string{"BidirectionalStreamingMethod"}
 
+// MethodNameBidirectionalStreamingMethod is the method name for "BidirectionalStreamingMethod"
+var MethodNameBidirectionalStreamingMethod = "BidirectionalStreamingMethod"
+
 // BidirectionalStreamingMethodServerStream is the interface a
 // "BidirectionalStreamingMethod" endpoint server stream must satisfy.
 type BidirectionalStreamingMethodServerStream interface {
@@ -1999,6 +2089,9 @@ const ServiceName = "BidirectionalStreamingNoPayloadService"
 // MethodKey key.
 var MethodNames = [1]string{"BidirectionalStreamingNoPayloadMethod"}
 
+// MethodNameBidirectionalStreamingNoPayloadMethod is the method name for "BidirectionalStreamingNoPayloadMethod"
+var MethodNameBidirectionalStreamingNoPayloadMethod = "BidirectionalStreamingNoPayloadMethod"
+
 // BidirectionalStreamingNoPayloadMethodServerStream is the interface a
 // "BidirectionalStreamingNoPayloadMethod" endpoint server stream must satisfy.
 type BidirectionalStreamingNoPayloadMethodServerStream interface {
@@ -2043,6 +2136,9 @@ const ServiceName = "BidirectionalStreamingResultWithViewsService"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"BidirectionalStreamingResultWithViewsMethod"}
+
+// MethodNameBidirectionalStreamingResultWithViewsMethod is the method name for "BidirectionalStreamingResultWithViewsMethod"
+var MethodNameBidirectionalStreamingResultWithViewsMethod = "BidirectionalStreamingResultWithViewsMethod"
 
 // BidirectionalStreamingResultWithViewsMethodServerStream is the interface a
 // "BidirectionalStreamingResultWithViewsMethod" endpoint server stream must
@@ -2174,6 +2270,9 @@ const ServiceName = "BidirectionalStreamingResultWithExplicitViewService"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [1]string{"BidirectionalStreamingResultWithExplicitViewMethod"}
+
+// MethodNameBidirectionalStreamingResultWithExplicitViewMethod is the method name for "BidirectionalStreamingResultWithExplicitViewMethod"
+var MethodNameBidirectionalStreamingResultWithExplicitViewMethod = "BidirectionalStreamingResultWithExplicitViewMethod"
 
 // BidirectionalStreamingResultWithExplicitViewMethodServerStream is the
 // interface a "BidirectionalStreamingResultWithExplicitViewMethod" endpoint
