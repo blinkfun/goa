@@ -505,6 +505,19 @@ func (a *AttributeExpr) AddMeta(name string, vals ...string) {
 	a.Meta[name] = append(a.Meta[name], vals...)
 }
 
+// ExtractUserExamples return the examples defined in the design directly on the
+// attribute or on its type.
+func (a *AttributeExpr) ExtractUserExamples() []*ExampleExpr {
+	if len(a.UserExamples) > 0 {
+		return a.UserExamples
+	}
+	ut, ok := a.Type.(UserType)
+	if !ok {
+		return nil
+	}
+	return ut.Attribute().ExtractUserExamples()
+}
+
 // Debug dumps the attribute to STDOUT in a goa developer friendly way.
 func (a *AttributeExpr) Debug(prefix string) { a.debug(prefix, make(map[*AttributeExpr]int), 0) }
 func (a *AttributeExpr) debug(prefix string, seen map[*AttributeExpr]int, indent int) {
@@ -528,12 +541,29 @@ func (a *AttributeExpr) debug(prefix string, seen map[*AttributeExpr]int, indent
 		m.KeyType.debug("key", seen, indent+1)
 		m.ElemType.debug("elem", seen, indent+1)
 	}
+	if rt, ok := a.Type.(*ResultTypeExpr); ok {
+		fmt.Printf("%sviews\n", tab)
+		for _, v := range rt.Views {
+			nats := *AsObject(v.AttributeExpr.Type)
+			keys := make([]string, len(nats))
+			for i, n := range nats {
+				keys[i] = n.Name
+			}
+			fmt.Printf("%s- %s: %v\n", tab+"  ", v.Name, keys)
+		}
+	}
 	if d := a.DefaultValue; d != nil {
 		fmt.Printf("%sdefault\n", tab)
 		fmt.Printf("%s%#v", tab+"  ", a.DefaultValue)
 	}
 	if v := a.Validation; v != nil {
 		v.Debug(indent + 1)
+	}
+	if len(a.UserExamples) > 0 {
+		fmt.Printf("%sexamples\n", tab)
+		for _, ex := range a.UserExamples {
+			fmt.Printf("%s- %s: %#v\n", tab+"  ", ex.Summary, ex.Value)
+		}
 	}
 	if len(a.Meta) > 0 {
 		fmt.Printf("%smeta\n", tab)
@@ -738,7 +768,7 @@ func (v *ValidationExpr) Debug(indent int) {
 		fmt.Printf("%s- minLength: %v\n", prefix, *v.MinLength)
 	}
 	if v.MaxLength != nil {
-		fmt.Printf("%s- minLength: %v\n", prefix, *v.MaxLength)
+		fmt.Printf("%s- maxLength: %v\n", prefix, *v.MaxLength)
 	}
 	if len(v.Required) > 0 {
 		fmt.Printf("%s- required: %v\n", prefix, v.Required)

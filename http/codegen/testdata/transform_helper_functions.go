@@ -21,42 +21,7 @@ func unmarshalInnerTypeRequestBodyToServicebodyuserinnerdefaultInnerType(v *Inne
 }
 `
 
-var PayloadBodyUserInnerDefaultTransformCode2 = `// unmarshalInnerTypeRequestBodyToServicebodyuserinnerdefaultInnerType builds a
-// value of type *servicebodyuserinnerdefault.InnerType from a value of type
-// *InnerTypeRequestBody.
-func unmarshalInnerTypeRequestBodyToServicebodyuserinnerdefaultInnerType(v *InnerTypeRequestBody) *servicebodyuserinnerdefault.InnerType {
-	if v == nil {
-		return nil
-	}
-	res := &servicebodyuserinnerdefault.InnerType{
-		A: *v.A,
-	}
-	if v.B != nil {
-		res.B = *v.B
-	}
-	if v.B == nil {
-		res.B = "defaultb"
-	}
-
-	return res
-}
-`
-
 var PayloadBodyInlineRecursiveUserTransformCode1 = `// unmarshalPayloadTypeRequestBodyToServicebodyinlinerecursiveuserPayloadType
-// builds a value of type *servicebodyinlinerecursiveuser.PayloadType from a
-// value of type *PayloadTypeRequestBody.
-func unmarshalPayloadTypeRequestBodyToServicebodyinlinerecursiveuserPayloadType(v *PayloadTypeRequestBody) *servicebodyinlinerecursiveuser.PayloadType {
-	res := &servicebodyinlinerecursiveuser.PayloadType{
-		A: *v.A,
-		B: v.B,
-	}
-	res.C = unmarshalPayloadTypeRequestBodyToServicebodyinlinerecursiveuserPayloadType(v.C)
-
-	return res
-}
-`
-
-var PayloadBodyInlineRecursiveUserTransformCode2 = `// unmarshalPayloadTypeRequestBodyToServicebodyinlinerecursiveuserPayloadType
 // builds a value of type *servicebodyinlinerecursiveuser.PayloadType from a
 // value of type *PayloadTypeRequestBody.
 func unmarshalPayloadTypeRequestBodyToServicebodyinlinerecursiveuserPayloadType(v *PayloadTypeRequestBody) *servicebodyinlinerecursiveuser.PayloadType {
@@ -81,6 +46,12 @@ func marshalInnerTypeRequestBodyToServicebodyuserinnerdefaultInnerType(v *InnerT
 		A: v.A,
 		B: v.B,
 	}
+	{
+		var zero string
+		if res.B == zero {
+			res.B = "defaultb"
+		}
+	}
 
 	return res
 }
@@ -96,6 +67,12 @@ func marshalServicebodyuserinnerdefaultInnerTypeToInnerTypeRequestBody(v *servic
 	res := &InnerTypeRequestBody{
 		A: v.A,
 		B: v.B,
+	}
+	{
+		var zero string
+		if res.B == zero {
+			res.B = "defaultb"
+		}
 	}
 
 	return res

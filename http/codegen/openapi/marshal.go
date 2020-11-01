@@ -3,7 +3,7 @@ package openapi
 import (
 	"encoding/json"
 
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // MarshalJSON produces the JSON resulting from encoding an object composed of

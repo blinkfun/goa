@@ -45,7 +45,7 @@ type (
 var (
 	// ErrorResultIdentifier is the result type identifier used for error
 	// responses.
-	ErrorResultIdentifier = "application/vnd.common.error"
+	ErrorResultIdentifier = "application/vnd.general.error"
 
 	// ErrorResult is the built-in result type for error responses.
 	ErrorResult = &ResultTypeExpr{
@@ -170,6 +170,24 @@ func (m *ResultTypeExpr) ViewHasAttribute(view, attr string) bool {
 // the underlying UserTypeExpr.
 func (m *ResultTypeExpr) Finalize() {
 	if m.View("default") == nil {
+		m.ensureDefaultView()
+	}
+	m.UserTypeExpr.Finalize()
+	seen := make(map[string]struct{})
+	walkAttribute(m.AttributeExpr, func(_ string, att *AttributeExpr) error {
+		if rt, ok := att.Type.(*ResultTypeExpr); ok {
+			if _, ok := seen[rt.Identifier]; !ok {
+				seen[rt.Identifier] = struct{}{}
+				rt.ensureDefaultView()
+			}
+		}
+		return nil
+	})
+}
+
+// ensureDefaultView builds the default view if not explicitly defined.
+func (m *ResultTypeExpr) ensureDefaultView() {
+	if m.View("default") == nil {
 		att := DupAtt(m.AttributeExpr)
 		if arr := AsArray(att.Type); arr != nil {
 			att.Type = AsObject(arr.ElemType.Type)
@@ -181,7 +199,6 @@ func (m *ResultTypeExpr) Finalize() {
 		}
 		m.Views = append(m.Views, v)
 	}
-	m.UserTypeExpr.Finalize()
 }
 
 // Project creates a ResultTypeExpr containing the fields defined in the view
@@ -266,6 +283,7 @@ func projectSingle(m *ResultTypeExpr, view string, seen ...map[string]*Attribute
 	ut.TypeName = typeName
 	ut.UID = id
 	ut.AttributeExpr.Type = Dup(v.Type)
+	ut.AttributeExpr.UserExamples = v.UserExamples
 	projected := &ResultTypeExpr{
 		Identifier:   id,
 		UserTypeExpr: ut,
@@ -277,7 +295,7 @@ func projectSingle(m *ResultTypeExpr, view string, seen ...map[string]*Attribute
 	}}
 
 	projectedObj := projected.Type.(*Object)
-	mtObj := m.Type.(*Object)
+	mtObj := AsObject(m.Type)
 	for _, nat := range *viewObj {
 		if at := mtObj.Attribute(nat.Name); at != nil {
 			pat, err := projectRecursive(at, nat, view, seen...)

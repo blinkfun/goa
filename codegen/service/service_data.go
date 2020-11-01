@@ -504,7 +504,6 @@ func (d ServicesData) analyze(service *expr.ServiceExpr) *Data {
 				errorInits = append(errorInits, buildErrorInitData(er, scope))
 			}
 		}
-
 		for _, er := range service.Errors {
 			recordError(er)
 		}
@@ -583,15 +582,19 @@ func (d ServicesData) analyze(service *expr.ServiceExpr) *Data {
 		for i, e := range service.Methods {
 			m := buildMethodData(e, pkgName, service, scope)
 			if rt, ok := e.Result.Type.(*expr.ResultTypeExpr); ok {
-				if vrt, ok := seenViewed[m.Result]; ok {
+				var view string
+				if v, ok := e.Result.Meta["view"]; ok {
+					view = v[0]
+				}
+				if vrt, ok := seenViewed[m.Result+"::"+view]; ok {
 					m.ViewedResult = vrt
 				} else {
 					projected := seenProj[rt.ID()]
 					projAtt := &expr.AttributeExpr{Type: projected.Type}
 					vrt := buildViewedResultType(e.Result, projAtt, viewspkg, scope, viewScope)
 					viewedRTs = append(viewedRTs, vrt)
-					seenViewed[vrt.Name] = vrt
 					m.ViewedResult = vrt
+					seenViewed[vrt.Name+"::"+view] = vrt
 				}
 			}
 			methods[i] = m
@@ -970,8 +973,11 @@ func BuildSchemeData(s *expr.SchemeExpr, m *expr.MethodExpr) *SchemeData {
 }
 
 // collectProjectedTypes builds a projected type for every user type found
-// when recursing through the attributes. It stores the projected types in
-// data.
+// when recursing through the attributes. The projected types live in the views
+// package and support the marshaling and unmarshalling of result types that
+// make use of views. We need to build projected types for all user types - not
+// just result types - because user types make contain result types and thus may
+// need to be marshalled in different ways depending on the view being used.
 func collectProjectedTypes(projected, att *expr.AttributeExpr, viewspkg string, scope, viewScope *codegen.NameScope, seen map[string]*ProjectedTypeData) (data []*ProjectedTypeData) {
 	collect := func(projected, att *expr.AttributeExpr) []*ProjectedTypeData {
 		return collectProjectedTypes(projected, att, viewspkg, scope, viewScope, seen)
