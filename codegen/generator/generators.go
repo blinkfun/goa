@@ -24,7 +24,7 @@ func generators(cmd string) ([]Genfunc, error) {
 	case "gen":
 		return []Genfunc{Service, Transport, OpenAPI}, nil
 	case "gen-cli":
-		return []Genfunc{ClientTransport}, nil
+		return []Genfunc{Service, ClientTransport}, nil
 	case "gen-server":
 		return []Genfunc{Service, ServerTransport, OpenAPI}, nil
 	case "example":
