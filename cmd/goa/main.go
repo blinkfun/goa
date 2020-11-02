@@ -26,7 +26,7 @@ func main() {
 		case "version":
 			fmt.Println("Goa version " + goa.Version())
 			os.Exit(0)
-		case "gen", "example", "gen-server":
+		case "gen", "example", "gen-cli", "gen-server":
 			if len(os.Args) == 2 {
 				usage()
 			}
@@ -127,8 +127,10 @@ Usage:
 Commands:
   gen
         Generate service interfaces, endpoints, transport code and OpenAPI spec.
+  gen-cli
+        Generate client interfaces, endpoints, transport code etc.
   gen-server
-        Generate service interfaces, server's endpoints, server's transport code only and OpenAPI spec.
+        Generate service interfaces, server's endpoints, transport code only and OpenAPI spec.
   example
         Generate example server and client tool.
   version
