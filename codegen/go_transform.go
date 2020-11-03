@@ -62,7 +62,7 @@ func GoTransform(source, target *expr.AttributeExpr, sourceVar, targetVar string
 	return strings.TrimRight(code, "\n"), funcs, nil
 }
 
-// transformPrimitive returns the code to transform source primtive type to
+// transformPrimitive returns the code to transform source primitive type to
 // target primitive type. It returns an error if source and target are not
 // compatible for transformation.
 func transformPrimitive(source, target *expr.AttributeExpr, sourceVar, targetVar string, newVar bool, ta *TransformAttrs) (string, error) {
@@ -222,7 +222,7 @@ func transformObject(source, target *expr.AttributeExpr, sourceVar, targetVar st
 		// 1) user type and we want to avoid calling transform helper functions
 		// with nil value
 		// 2) it's an object, map or array to avoid making empty arrays and maps
-		// and to avoid derefencing nil.
+		// and to avoid defencing nil.
 		var checkNil bool
 		{
 			isRef := !expr.IsPrimitive(srcc.Type) && !srcMatt.IsRequired(n) || ta.SourceCtx.IsPrimitivePointer(n, srcMatt.AttributeExpr) && expr.IsPrimitive(srcc.Type)
@@ -371,7 +371,7 @@ func transformAttributeHelpers(source, target *expr.AttributeExpr, ta *Transform
 // collectHelpers recurses through the given attributes and returns the transform
 // helper functions required to generate the transform code. If the attributes type
 // is array or map then the recursion is done via transformAttributeHelpers so that
-// the tope level conversion function is skipped as the generate code does not make
+// the top level conversion function is skipped as the generate code does not make
 // use of it (since it inlines that top-level transformation).
 func collectHelpers(source, target *expr.AttributeExpr, req bool, ta *TransformAttrs, seen map[string]*TransformFunctionData) (helpers []*TransformFunctionData, err error) {
 	name := transformHelperName(source, target, ta)
@@ -412,7 +412,7 @@ func collectHelpers(source, target *expr.AttributeExpr, req bool, ta *TransformA
 }
 
 // generateHelper generates the code that transform instances of source into
-// target. Both source and targe must be user types or generateHelper panics.
+// target. Both source and target must be user types or generateHelper panics.
 // generateHelper returns nil if a helper has already been generated for the
 // pair source, target.
 func generateHelper(source, target *expr.AttributeExpr, req bool, ta *TransformAttrs, seen map[string]*TransformFunctionData) (*TransformFunctionData, error) {
