@@ -5,8 +5,8 @@ go 1.14
 require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
 	github.com/dimfeld/httptreemux/v5 v5.2.2
-	github.com/getkin/kin-openapi v0.26.0
-	github.com/go-openapi/loads v0.19.5
+	github.com/getkin/kin-openapi v0.33.0
+	github.com/go-openapi/loads v0.20.0
 	github.com/golang/protobuf v1.4.3
 	github.com/google/gxui v0.0.0-20151028112939-f85e0a97b3a4 // indirect
 	github.com/gorilla/websocket v1.4.2
@@ -16,10 +16,9 @@ require (
 	github.com/sergi/go-diff v1.1.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
-	golang.org/x/text v0.3.3 // indirect
-	golang.org/x/tools v0.0.0-20201031021630-582c62ec74d0
+	golang.org/x/tools v0.0.0-20201208233053-a543418bbed2
 	google.golang.org/genproto v0.0.0-20200711021454-869866162049 // indirect
-	google.golang.org/grpc v1.33.1
+	google.golang.org/grpc v1.34.0
 	google.golang.org/protobuf v1.25.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0
+	gopkg.in/yaml.v2 v2.4.0
 )
