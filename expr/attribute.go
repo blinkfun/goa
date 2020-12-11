@@ -192,7 +192,7 @@ func (a *AttributeExpr) Validate(ctx string, parent eval.Expression) *eval.Valid
 	if o := AsObject(a.Type); o != nil {
 		for _, n := range a.AllRequired() {
 			if a.Find(n) == nil {
-				verr.Add(parent, `%s required field %q does not exist in type %s`, ctx, n, a.Type.Name())
+				verr.Add(parent, `%srequired field %q does not exist in type %s`, ctx, n, a.Type.Name())
 			}
 		}
 		for _, nat := range *o {
@@ -597,7 +597,7 @@ func (a *AttributeExpr) validateEnumDefault(ctx string, parent eval.Expression) 
 		if !found {
 			verr.Add(
 				parent,
-				"%s default value %#v is not one of the accepted values: %#v",
+				"%sdefault value %#v is not one of the accepted values: %#v",
 				ctx,
 				a.DefaultValue,
 				a.Validation.Values,

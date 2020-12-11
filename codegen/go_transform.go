@@ -222,7 +222,7 @@ func transformObject(source, target *expr.AttributeExpr, sourceVar, targetVar st
 		// 1) user type and we want to avoid calling transform helper functions
 		// with nil value
 		// 2) it's an object, map or array to avoid making empty arrays and maps
-		// and to avoid defencing nil.
+		// and to avoid derefencing nil.
 		var checkNil bool
 		{
 			isRef := !expr.IsPrimitive(srcc.Type) && !srcMatt.IsRequired(n) || ta.SourceCtx.IsPrimitivePointer(n, srcMatt.AttributeExpr) && expr.IsPrimitive(srcc.Type)
