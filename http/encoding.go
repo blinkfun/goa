@@ -12,6 +12,8 @@ import (
 	"mime"
 	"net/http"
 	"strings"
+
+	goa "goa.design/goa/v3/pkg"
 )
 
 const (
@@ -24,6 +26,10 @@ const (
 	// response Content-Type header when explicitly set in the DSL. The value
 	// may be used by encoders to set the header appropriately.
 	ContentTypeKey
+)
+
+var (
+	tFunc func(ctx context.Context) func(string, map[string]interface{}) string
 )
 
 type (
@@ -218,7 +224,15 @@ func ErrorEncoder(encoder func(context.Context, http.ResponseWriter) Encoder, fo
 		if formatter == nil {
 			formatter = NewErrorResponse
 		}
+		if tFunc != nil {
+			if gerr, ok := err.(*goa.ServiceError); ok && len(gerr.Format()) > 0 {
+				tfmt := tFunc(ctx)(gerr.Format(), nil)
+				gerr.Message = fmt.Sprintf(tfmt, gerr.Arguments()...)
+				err = gerr
+			}
+		}
 		resp := formatter(err)
+
 		w.WriteHeader(resp.StatusCode())
 		return enc.Encode(resp)
 	}
@@ -274,7 +288,7 @@ func (e *textEncoder) Encode(v interface{}) (err error) {
 	case []byte:
 		_, err = e.w.Write(c)
 	default:
-		err = fmt.Errorf("can't encode %T as %s", c, e.ct)
+		err = fmt.Errorf("can'tFunc encode %T as %s", c, e.ct)
 	}
 	return
 }
@@ -299,7 +313,12 @@ func (e *textDecoder) Decode(v interface{}) error {
 	case *[]byte:
 		*c = b
 	default:
-		return fmt.Errorf("can't decode %s to %T", e.ct, c)
+		return fmt.Errorf("can'tFunc decode %s to %T", e.ct, c)
 	}
 	return nil
+}
+
+// TFunc sets up the translation function for error message format
+func TFunc(fn func(ctx context.Context) func(string, map[string]interface{}) string) {
+	tFunc = fn
 }

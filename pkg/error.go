@@ -18,6 +18,10 @@ type (
 		ID string
 		// Message contains the specific error details.
 		Message string
+		// format is only as key for i18n
+		format string
+		// arguments for message format
+		arguments []interface{}
 	}
 )
 
@@ -107,22 +111,22 @@ func InvalidPatternError(name, target string, pattern string) error {
 // of a payload field does not match the range validation defined in the design.
 // value may be an int or a float64.
 func InvalidRangeError(name string, target interface{}, value interface{}, min bool) error {
-	comp := "greater or equal"
+	format := "%s must be greater or equal than %d but got value %#v"
 	if !min {
-		comp = "lesser or equal"
+		format = "%s must be lesser or equal than %d but got value %#v"
 	}
-	return PermanentError(ErrNameInvalidRange, "%s must be %s than %d but got value %#v", name, comp, value, target)
+	return PermanentError(ErrNameInvalidRange, format, name, value, target)
 }
 
 // InvalidLengthError is the error produced by the generated code when the value
 // of a payload field does not match the length validation defined in the
 // design.
 func InvalidLengthError(name string, target interface{}, ln, value int, min bool) error {
-	comp := "greater or equal"
+	format := "length of %s must be greater or equal than %d but got value %#v (len=%d)"
 	if !min {
-		comp = "lesser or equal"
+		format = "length of %s must be lesser or equal than %d but got value %#v (len=%d)"
 	}
-	return PermanentError(ErrNameInvalidLength, "length of %s must be %s than %d but got value %#v (len=%d)", name, comp, value, target, ln)
+	return PermanentError(ErrNameInvalidLength, format, name, value, target, ln)
 }
 
 // NewErrorID creates a unique 8 character ID that is well suited to use as an
@@ -175,11 +179,21 @@ func (s *ServiceError) Error() string { return s.Message }
 // ErrorName returns the error name.
 func (s *ServiceError) ErrorName() string { return s.Name }
 
+func (s *ServiceError) Format() string {
+	return s.format
+}
+
+func (s *ServiceError) Arguments() []interface{} {
+	return s.arguments
+}
+
 func newError(name string, format string, v ...interface{}) *ServiceError {
 	return &ServiceError{
-		Name:    name,
-		ID:      NewErrorID(),
-		Message: fmt.Sprintf(format, v...),
+		Name:      name,
+		ID:        NewErrorID(),
+		Message:   fmt.Sprintf(format, v...),
+		format:    format,
+		arguments: v,
 	}
 }
 
