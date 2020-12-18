@@ -298,6 +298,20 @@ var BidirectionalStreamingRPCWithErrorsDSL = func() {
 	})
 }
 
+var BidirectionalStreamingRPCSameTypeDSL = func() {
+	var T = Type("UserType", func() {
+		Field(1, "a", Int)
+		Field(2, "b", String)
+	})
+	Service("ServiceBidirectionalStreamingRPCSameType", func() {
+		Method("MethodBidirectionalStreamingRPCSameType", func() {
+			StreamingPayload(T)
+			StreamingResult(T)
+			GRPC(func() {})
+		})
+	})
+}
+
 var MessageUserTypeWithPrimitivesDSL = func() {
 	var PayloadT = Type("PayloadT", func() {
 		Field(1, "BooleanField", Boolean)
@@ -778,6 +792,29 @@ var MethodWithAcronymDSL = func() {
 	Service("MethodWithAcronym", func() {
 		Method("method_jwt", func() {
 			GRPC(func() {})
+		})
+	})
+}
+
+var PayloadWithValidationsDSL = func() {
+	Service("PayloadWithValidation", func() {
+		Method("method_a", func() {
+			Payload(func() {
+				Attribute("MetadataInt", Int, func() {
+					Minimum(0)
+					Maximum(100)
+				})
+				Attribute("MetadataString", String, func() {
+					MinLength(5)
+					MaxLength(10)
+				})
+			})
+			GRPC(func() {
+				Metadata(func() {
+					Attribute("MetadataInt")
+					Attribute("MetadataString")
+				})
+			})
 		})
 	})
 }

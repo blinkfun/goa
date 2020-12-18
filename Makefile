@@ -14,7 +14,7 @@
 #
 MAJOR=3
 MINOR=2
-BUILD=5
+BUILD=6
 
 GOOS=$(shell go env GOOS)
 GO_FILES=$(shell find . -type f -name '*.go')
@@ -35,24 +35,20 @@ all: lint test
 travis: depend all #test-examples test-plugins
 
 # Install protoc
-PROTOC_VERSION=3.12.3
+PROTOC_VERSION=3.14.0
+UNZIP=unzip
 ifeq ($(GOOS),linux)
-PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
-PROTOC_EXEC=$(PROTOC)/bin/protoc
-UNZIP=unzip
-else
-	ifeq ($(GOOS),darwin)
-PROTOC=protoc-$(PROTOC_VERSION)-osx-x86_64
-PROTOC_EXEC=$(PROTOC)/bin/protoc
-UNZIP=unzip
-	else
-		ifeq ($(GOOS),windows)
-PROTOC=protoc-$(PROTOC_VERSION)-win32
-PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
-GOPATH:=$(subst \,/,$(GOPATH))
-UNZIP=unzip
-		endif
-	endif
+	PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
+	PROTOC_EXEC=$(PROTOC)/bin/protoc
+endif
+ifeq ($(GOOS),darwin)
+	PROTOC=protoc-$(PROTOC_VERSION)-osx-x86_64
+	PROTOC_EXEC=$(PROTOC)/bin/protoc
+endif
+ifeq ($(GOOS),windows)
+	PROTOC=protoc-$(PROTOC_VERSION)-win32
+	PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
+	GOPATH:=$(subst \,/,$(GOPATH))
 endif
 
 depend:
