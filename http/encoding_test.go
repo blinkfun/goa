@@ -93,7 +93,7 @@ func TestTextEncoder_Encode(t *testing.T) {
 		{"string", testString, nil},
 		{"*string", &testString, nil},
 		{"[]byte", []byte(testString), nil},
-		{"other", 123, fmt.Errorf("can'tFunc encode int as content/type")},
+		{"other", 123, fmt.Errorf("can't encode int as content/type")},
 	}
 
 	buffer := bytes.Buffer{}
@@ -148,7 +148,7 @@ func TestTextPlainDecoder_Decode_Bytes(t *testing.T) {
 func TestTextPlainDecoder_Decode_Other(t *testing.T) {
 	decoder := makeTextDecoder()
 
-	expectedErr := fmt.Errorf("can'tFunc decode content/type to *int")
+	expectedErr := fmt.Errorf("can't decode content/type to *int")
 
 	var value int
 	err := decoder.Decode(&value)

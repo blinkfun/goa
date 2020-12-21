@@ -288,7 +288,7 @@ func (e *textEncoder) Encode(v interface{}) (err error) {
 	case []byte:
 		_, err = e.w.Write(c)
 	default:
-		err = fmt.Errorf("can'tFunc encode %T as %s", c, e.ct)
+		err = fmt.Errorf("can't encode %T as %s", c, e.ct)
 	}
 	return
 }
@@ -313,7 +313,7 @@ func (e *textDecoder) Decode(v interface{}) error {
 	case *[]byte:
 		*c = b
 	default:
-		return fmt.Errorf("can'tFunc decode %s to %T", e.ct, c)
+		return fmt.Errorf("can't decode %s to %T", e.ct, c)
 	}
 	return nil
 }
