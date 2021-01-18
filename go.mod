@@ -18,6 +18,6 @@ require (
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
 	golang.org/x/tools v0.0.0-20201218024724-ae774e9781d2
 	google.golang.org/genproto v0.0.0-20200711021454-869866162049 // indirect
-	google.golang.org/grpc v1.34.0
+	google.golang.org/grpc v1.35.0
 	gopkg.in/yaml.v2 v2.4.0
 )
