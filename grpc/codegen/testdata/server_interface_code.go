@@ -7,6 +7,14 @@ func (s *Server) MethodUnaryRPCA(ctx context.Context, message *service_unary_rp_
 	ctx = context.WithValue(ctx, goa.ServiceKey, "ServiceUnaryRPCs")
 	resp, err := s.MethodUnaryRPCAH.Handle(ctx, message)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return nil, goagrpc.EncodeError(err)
 	}
 	return resp.(*service_unary_rp_cspb.MethodUnaryRPCAResponse), nil
@@ -19,6 +27,14 @@ func (s *Server) MethodUnaryRPCB(ctx context.Context, message *service_unary_rp_
 	ctx = context.WithValue(ctx, goa.ServiceKey, "ServiceUnaryRPCs")
 	resp, err := s.MethodUnaryRPCBH.Handle(ctx, message)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return nil, goagrpc.EncodeError(err)
 	}
 	return resp.(*service_unary_rp_cspb.MethodUnaryRPCBResponse), nil
@@ -32,6 +48,14 @@ func (s *Server) MethodUnaryRPCNoPayload(ctx context.Context, message *service_u
 	ctx = context.WithValue(ctx, goa.ServiceKey, "ServiceUnaryRPCNoPayload")
 	resp, err := s.MethodUnaryRPCNoPayloadH.Handle(ctx, message)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return nil, goagrpc.EncodeError(err)
 	}
 	return resp.(*service_unary_rpc_no_payloadpb.MethodUnaryRPCNoPayloadResponse), nil
@@ -45,6 +69,14 @@ func (s *Server) MethodUnaryRPCNoResult(ctx context.Context, message *service_un
 	ctx = context.WithValue(ctx, goa.ServiceKey, "ServiceUnaryRPCNoResult")
 	resp, err := s.MethodUnaryRPCNoResultH.Handle(ctx, message)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return nil, goagrpc.EncodeError(err)
 	}
 	return resp.(*service_unary_rpc_no_resultpb.MethodUnaryRPCNoResultResponse), nil
@@ -73,6 +105,14 @@ func (s *Server) MethodUnaryRPCWithErrors(ctx context.Context, message *service_
 				return nil, goagrpc.NewStatusError(codes.Unknown, err, NewMethodUnaryRPCWithErrorsCustomErrorError(er))
 			}
 		}
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return nil, goagrpc.EncodeError(err)
 	}
 	return resp.(*service_unary_rpc_with_errorspb.MethodUnaryRPCWithErrorsResponse), nil
@@ -96,6 +136,14 @@ func (s *Server) MethodUnaryRPCWithOverridingErrors(ctx context.Context, message
 				return nil, goagrpc.NewStatusError(codes.Unknown, err, goagrpc.NewErrorResponse(err))
 			}
 		}
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return nil, goagrpc.EncodeError(err)
 	}
 	return resp.(*service_unary_rpc_with_overriding_errorspb.MethodUnaryRPCWithOverridingErrorsResponse), nil
@@ -110,6 +158,14 @@ func (s *Server) MethodServerStreamingRPC(message *service_server_streaming_rpcp
 	ctx = context.WithValue(ctx, goa.ServiceKey, "ServiceServerStreamingRPC")
 	p, err := s.MethodServerStreamingRPCH.Decode(ctx, message)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	ep := &serviceserverstreamingrpc.MethodServerStreamingRPCEndpointInput{
@@ -118,6 +174,14 @@ func (s *Server) MethodServerStreamingRPC(message *service_server_streaming_rpcp
 	}
 	err = s.MethodServerStreamingRPCH.Handle(ctx, ep)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	return nil
@@ -132,6 +196,14 @@ func (s *Server) MethodClientStreamingRPC(stream service_client_streaming_rpcpb.
 	ctx = context.WithValue(ctx, goa.ServiceKey, "ServiceClientStreamingRPC")
 	_, err := s.MethodClientStreamingRPCH.Decode(ctx, nil)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	ep := &serviceclientstreamingrpc.MethodClientStreamingRPCEndpointInput{
@@ -139,6 +211,14 @@ func (s *Server) MethodClientStreamingRPC(stream service_client_streaming_rpcpb.
 	}
 	err = s.MethodClientStreamingRPCH.Handle(ctx, ep)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	return nil
@@ -155,6 +235,14 @@ func (s *Server) MethodClientStreamingRPCWithPayload(stream service_client_strea
 	ctx = context.WithValue(ctx, goa.ServiceKey, "ServiceClientStreamingRPCWithPayload")
 	p, err := s.MethodClientStreamingRPCWithPayloadH.Decode(ctx, nil)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	ep := &serviceclientstreamingrpcwithpayload.MethodClientStreamingRPCWithPayloadEndpointInput{
@@ -163,6 +251,14 @@ func (s *Server) MethodClientStreamingRPCWithPayload(stream service_client_strea
 	}
 	err = s.MethodClientStreamingRPCWithPayloadH.Handle(ctx, ep)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	return nil
@@ -179,6 +275,14 @@ func (s *Server) MethodBidirectionalStreamingRPC(stream service_bidirectional_st
 	ctx = context.WithValue(ctx, goa.ServiceKey, "ServiceBidirectionalStreamingRPC")
 	_, err := s.MethodBidirectionalStreamingRPCH.Decode(ctx, nil)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	ep := &servicebidirectionalstreamingrpc.MethodBidirectionalStreamingRPCEndpointInput{
@@ -186,6 +290,14 @@ func (s *Server) MethodBidirectionalStreamingRPC(stream service_bidirectional_st
 	}
 	err = s.MethodBidirectionalStreamingRPCH.Handle(ctx, ep)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	return nil
@@ -202,6 +314,14 @@ func (s *Server) MethodBidirectionalStreamingRPCWithPayload(stream service_bidir
 	ctx = context.WithValue(ctx, goa.ServiceKey, "ServiceBidirectionalStreamingRPCWithPayload")
 	p, err := s.MethodBidirectionalStreamingRPCWithPayloadH.Decode(ctx, nil)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	ep := &servicebidirectionalstreamingrpcwithpayload.MethodBidirectionalStreamingRPCWithPayloadEndpointInput{
@@ -210,6 +330,14 @@ func (s *Server) MethodBidirectionalStreamingRPCWithPayload(stream service_bidir
 	}
 	err = s.MethodBidirectionalStreamingRPCWithPayloadH.Handle(ctx, ep)
 	if err != nil {
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	return nil
@@ -236,6 +364,14 @@ func (s *Server) MethodBidirectionalStreamingRPCWithErrors(stream service_bidire
 				return goagrpc.NewStatusError(codes.InvalidArgument, err, goagrpc.NewErrorResponse(err))
 			}
 		}
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return goagrpc.EncodeError(err)
 	}
 	ep := &servicebidirectionalstreamingrpcwitherrors.MethodBidirectionalStreamingRPCWithErrorsEndpointInput{
@@ -252,6 +388,14 @@ func (s *Server) MethodBidirectionalStreamingRPCWithErrors(stream service_bidire
 			case "bad_request":
 				return goagrpc.NewStatusError(codes.InvalidArgument, err, goagrpc.NewErrorResponse(err))
 			}
+		}
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
 		}
 		return goagrpc.EncodeError(err)
 	}

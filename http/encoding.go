@@ -29,7 +29,7 @@ const (
 )
 
 var (
-	tFunc func(ctx context.Context) func(string, map[string]interface{}) string
+	tFunc func(context.Context, string, map[string]interface{}) string
 )
 
 type (
@@ -224,13 +224,20 @@ func ErrorEncoder(encoder func(context.Context, http.ResponseWriter) Encoder, fo
 		if formatter == nil {
 			formatter = NewErrorResponse
 		}
-		if tFunc != nil {
-			if gerr, ok := err.(*goa.ServiceError); ok && len(gerr.Format()) > 0 {
-				tfmt := tFunc(ctx)(gerr.Format(), nil)
+		if gerr, ok := err.(*goa.ServiceError); ok {
+			if tFunc != nil && len(gerr.Format()) > 0 {
+				tfmt := tFunc(ctx, gerr.Format(), nil)
 				gerr.Message = fmt.Sprintf(tfmt, gerr.Arguments()...)
 				err = gerr
 			}
 		}
+
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			w.Header().Set("x-error", xerr.ErrorName())
+		}
+
 		resp := formatter(err)
 
 		w.WriteHeader(resp.StatusCode())
@@ -319,6 +326,6 @@ func (e *textDecoder) Decode(v interface{}) error {
 }
 
 // TFunc sets up the translation function for error message format
-func TFunc(fn func(ctx context.Context) func(string, map[string]interface{}) string) {
+func TFunc(fn func(context.Context, string, map[string]interface{}) string) {
 	tFunc = fn
 }

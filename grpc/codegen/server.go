@@ -42,7 +42,9 @@ func serverFile(genpkg string, svc *expr.GRPCServiceExpr) *codegen.File {
 				{Path: "context"},
 				codegen.GoaImport(""),
 				codegen.GoaNamedImport("grpc", "goagrpc"),
+				{Path: "google.golang.org/grpc"},
 				{Path: "google.golang.org/grpc/codes"},
+				{Path: "google.golang.org/grpc/metadata"},
 				{Path: path.Join(genpkg, svcName), Name: data.Service.PkgName},
 				{Path: path.Join(genpkg, svcName, "views"), Name: data.Service.ViewsPkg},
 				{Path: path.Join(genpkg, "grpc", svcName, pbPkgName), Name: data.PkgName},
@@ -274,6 +276,14 @@ func (s *{{ .ServerStruct }}) {{ .Method.VarName }}(
 			}
 		}
 	{{- end }}
+		if xerr, ok := err.(interface {
+			ErrorName() string
+		}); ok {
+			md := metadata.Pairs(
+				"x-error", xerr.ErrorName(),
+			)
+			grpc.SetHeader(ctx, md)
+		}
 		return {{ if not $.ServerStream }}nil, {{ end }}goagrpc.EncodeError(err)
 	}
 {{- end }}
