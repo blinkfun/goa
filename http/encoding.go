@@ -28,10 +28,6 @@ const (
 	ContentTypeKey
 )
 
-var (
-	tFunc func(context.Context, string, map[string]interface{}) string
-)
-
 type (
 	// Decoder provides the actual decoding algorithm used to load HTTP
 	// request and response bodies.
@@ -53,6 +49,12 @@ type (
 
 	// private type used to define context keys.
 	contextKey int
+
+	TFunc = func(context.Context, string, map[string]interface{}) string
+)
+
+var (
+	tFunc TFunc
 )
 
 // RequestDecoder returns a HTTP request body decoder suitable for the given
@@ -325,7 +327,11 @@ func (e *textDecoder) Decode(v interface{}) error {
 	return nil
 }
 
-// TFunc sets up the translation function for error message format
-func TFunc(fn func(context.Context, string, map[string]interface{}) string) {
+// SetTFunc sets up the translation function for error message format
+func SetTFunc(fn TFunc) {
 	tFunc = fn
+}
+
+func NoopTFunc(_ context.Context, messageID string, _ map[string]interface{}) string {
+	return messageID
 }
