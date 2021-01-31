@@ -30,6 +30,7 @@ func ClientTransport(ctx context.Context, genpkg string, roots []eval.Root) ([]*
 		files = append(files, grpccodegen.ClientFiles(genpkg, r)...)
 		files = append(files, grpccodegen.ClientTypeFiles(genpkg, r)...)
 		files = append(files, grpccodegen.ClientCLIFiles(genpkg, r)...)
+		files = append(files, grpccodegen.ProtoFiles(genpkg, r)...)
 
 		for _, f := range files {
 			if len(f.SectionTemplates) > 0 {
