@@ -23,6 +23,11 @@ type (
 		// arguments for message format
 		arguments []interface{}
 	}
+
+	// ErrorName is implemented by error to provide the error name.
+	ErrorNamer interface {
+		ErrorName() string
+	}
 )
 
 // Fault creates an error given a format and values a la fmt.Printf. The error

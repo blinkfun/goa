@@ -234,9 +234,7 @@ func ErrorEncoder(encoder func(context.Context, http.ResponseWriter) Encoder, fo
 			}
 		}
 
-		if xerr, ok := err.(interface {
-			ErrorName() string
-		}); ok {
+		if xerr, ok := err.(goa.ErrorNamer); ok {
 			w.Header().Set("x-error", xerr.ErrorName())
 		}
 

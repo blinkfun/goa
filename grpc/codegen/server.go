@@ -276,9 +276,7 @@ func (s *{{ .ServerStruct }}) {{ .Method.VarName }}(
 			}
 		}
 	{{- end }}
-		if xerr, ok := err.(interface {
-			ErrorName() string
-		}); ok {
+		if xerr, ok := err.(goa.ErrorNamer); ok {
 			md := metadata.Pairs(
 				"x-error", xerr.ErrorName(),
 			)

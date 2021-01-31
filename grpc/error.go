@@ -113,7 +113,7 @@ func DecodeError(err error) proto.Message {
 // encoder or decoder.
 func ErrInvalidType(svc, m, expected string, actual interface{}) error {
 	msg := fmt.Sprintf("invalid value expected %s, got %v", expected, actual)
-	return &ClientError{Name: "invalid_type", Message: msg, Service: svc, Method: m}
+	return &ClientError{Name: goa.ErrNameInvalidType, Message: msg, Service: svc, Method: m}
 }
 
 // Error builds an error message.
