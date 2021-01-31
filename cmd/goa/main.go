@@ -127,7 +127,7 @@ Usage:
 Commands:
   gen
         Generate service interfaces, endpoints, transport code and OpenAPI spec.
-  gen-cli
+  gen-client
         Generate client interfaces, endpoints, transport code etc.
   gen-server
         Generate service interfaces, server's endpoints, transport code only and OpenAPI spec.
