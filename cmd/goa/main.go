@@ -26,7 +26,7 @@ func main() {
 		case "version":
 			fmt.Println("Goa version " + goa.Version())
 			os.Exit(0)
-		case "gen", "example", "gen-cli", "gen-server":
+		case "gen", "example", "gen-client", "gen-server":
 			if len(os.Args) == 2 {
 				usage()
 			}

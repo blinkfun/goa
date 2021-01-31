@@ -23,7 +23,7 @@ func generators(cmd string) ([]Genfunc, error) {
 	switch cmd {
 	case "gen":
 		return []Genfunc{Service, Transport, OpenAPI}, nil
-	case "gen-cli":
+	case "gen-client":
 		return []Genfunc{Service, ClientTransport}, nil
 	case "gen-server":
 		return []Genfunc{Service, ServerTransport, OpenAPI}, nil
