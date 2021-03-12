@@ -7,6 +7,8 @@ syntax = "proto3";
 
 package goapb;
 
+option go_package = "goapb";
+
 // ErrorResponse message defines the error encoded in the gRPC response that
 // correspond to the errors created by the generated code. This is mainly
 // intended for the clients to decode error responses.

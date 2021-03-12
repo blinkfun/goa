@@ -73,7 +73,14 @@ func protoc(path string) error {
 	dir := filepath.Dir(path)
 	os.MkdirAll(dir, 0777)
 
-	args := []string{"--go_out=plugins=grpc:.", path, "--proto_path", dir}
+	args := []string{
+		"--go_out=.",
+		"--go_opt=paths=source_relative",
+		"--go-grpc_out=.",
+		"--go-grpc_opt=paths=source_relative",
+		"--proto_path",
+		dir,
+		path}
 	cmd := exec.Command("protoc", args...)
 	cmd.Dir = filepath.Dir(path)
 
