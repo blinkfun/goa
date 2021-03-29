@@ -199,10 +199,10 @@ func metadataEncodeDecodeData(md *MetadataData, vname string) map[string]interfa
 // input: ServiceData
 const serverStructT = `{{ printf "%s implements the %s.%s interface." .ServerStruct .PkgName .ServerInterface | comment }}
 type {{ .ServerStruct }} struct {
-{{ printf "%s.Unimplemented%s" .PkgName .ServerInterface }}
 {{- range .Endpoints }}
 	{{ .Method.VarName }}H {{ if .ServerStream }}goagrpc.StreamHandler{{ else }}goagrpc.UnaryHandler{{ end }}
 {{- end }}
+	{{ .PkgName }}.Unimplemented{{ .ServerInterface }}
 }
 
 // ErrorNamer is an interface implemented by generated error structs that

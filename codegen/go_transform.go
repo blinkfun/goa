@@ -62,7 +62,7 @@ func GoTransform(source, target *expr.AttributeExpr, sourceVar, targetVar string
 	return strings.TrimRight(code, "\n"), funcs, nil
 }
 
-// transformPrimitive returns the code to transform source primitive type to
+// transformPrimitive returns the code to transform source primtive type to
 // target primitive type. It returns an error if source and target are not
 // compatible for transformation.
 func transformPrimitive(source, target *expr.AttributeExpr, sourceVar, targetVar string, newVar bool, ta *TransformAttrs) (string, error) {
@@ -371,7 +371,7 @@ func transformAttributeHelpers(source, target *expr.AttributeExpr, ta *Transform
 // collectHelpers recurses through the given attributes and returns the transform
 // helper functions required to generate the transform code. If the attributes type
 // is array or map then the recursion is done via transformAttributeHelpers so that
-// the top level conversion function is skipped as the generate code does not make
+// the tope level conversion function is skipped as the generate code does not make
 // use of it (since it inlines that top-level transformation).
 func collectHelpers(source, target *expr.AttributeExpr, req bool, ta *TransformAttrs, seen map[string]*TransformFunctionData) (helpers []*TransformFunctionData, err error) {
 	name := transformHelperName(source, target, ta)
@@ -412,7 +412,7 @@ func collectHelpers(source, target *expr.AttributeExpr, req bool, ta *TransformA
 }
 
 // generateHelper generates the code that transform instances of source into
-// target. Both source and target must be user types or generateHelper panics.
+// target. Both source and targe must be user types or generateHelper panics.
 // generateHelper returns nil if a helper has already been generated for the
 // pair source, target.
 func generateHelper(source, target *expr.AttributeExpr, req bool, ta *TransformAttrs, seen map[string]*TransformFunctionData) (*TransformFunctionData, error) {

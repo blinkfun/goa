@@ -13,8 +13,8 @@
 # - "all" is the default target, it runs "lint" and "test"
 #
 MAJOR=3
-MINOR=2
-BUILD=6
+MINOR=3
+BUILD=1
 
 GOOS=$(shell go env GOOS)
 GO_FILES=$(shell find . -type f -name '*.go')
@@ -26,8 +26,7 @@ DEPEND=\
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
 	google.golang.org/protobuf/cmd/protoc-gen-go \
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc \
-	github.com/golang/protobuf/proto \
+        google.golang.org/grpc/cmd/protoc-gen-go-grpc \
 	honnef.co/go/tools/cmd/staticcheck \
 	github.com/getkin/kin-openapi
 
@@ -55,7 +54,7 @@ endif
 depend:
 	@echo INSTALLING DEPENDENCIES...
 	@go mod download
-	@go get -v $(DEPEND)
+	@go get -u -v $(DEPEND)
 	@echo INSTALLING PROTOC...
 	@mkdir $(PROTOC)
 	@cd $(PROTOC); \
@@ -67,9 +66,6 @@ depend:
 
 lint:
 ifneq ($(GOOS),windows)
-	@if [ "`goimports -l $(GO_FILES) | tee /dev/stderr`" ]; then \
-		echo "^ - Repo contains improperly formatted go files" && echo && exit 1; \
-	fi
 	@if [ "`golint ./... | grep -vf .golint_exclude | tee /dev/stderr`" ]; then \
 		echo "^ - Lint errors!" && echo && exit 1; \
 	fi
@@ -125,5 +121,3 @@ release:
 		git push origin v$(MAJOR).$(MINOR).$(BUILD)
 	echo DONE RELEASING v$(MAJOR).$(MINOR).$(BUILD)!
 
-test-files:
-	find . -type f -name '*_test.go'

@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/expr"
@@ -30,8 +29,6 @@ func protoFile(genpkg string, svc *expr.GRPCServiceExpr) *codegen.File {
 	data := GRPCServices.Get(svc.Name())
 	svcName := codegen.SnakeCase(data.Service.VarName)
 	path := filepath.Join(codegen.Gendir, "grpc", svcName, pbPkgName, svcName+".proto")
-	meta := svc.Meta
-	pkg := codegen.SnakeCase(codegen.Goify(svcName, false))
 
 	sections := []*codegen.SectionTemplate{
 		// header comments
@@ -49,8 +46,7 @@ func protoFile(genpkg string, svc *expr.GRPCServiceExpr) *codegen.File {
 			Source: protoStartT,
 			Data: map[string]interface{}{
 				"ProtoVersion": ProtoVersion,
-				"Pkg":          pkg,
-				"Options":      OptionsFromExpr(pkg, meta),
+				"Pkg":          codegen.SnakeCase(codegen.Goify(svcName, false)),
 			},
 		},
 		// service definition
@@ -73,14 +69,7 @@ func protoc(path string) error {
 	dir := filepath.Dir(path)
 	os.MkdirAll(dir, 0777)
 
-	args := []string{
-		"--go_out=.",
-		"--go_opt=paths=source_relative",
-		"--go-grpc_out=.",
-		"--go-grpc_opt=paths=source_relative",
-		"--proto_path",
-		dir,
-		path}
+	args := []string{"--proto_path", dir, "--go_out", dir, "--go-grpc_out", dir, "--go_opt=paths=source_relative", "--go-grpc_opt=paths=source_relative", path}
 	cmd := exec.Command("protoc", args...)
 	cmd.Dir = filepath.Dir(path)
 
@@ -89,34 +78,6 @@ func protoc(path string) error {
 	}
 
 	return nil
-}
-
-func OptionsFromExpr(pkg string, mdata expr.MetaExpr) map[string]string {
-	return optionsFromExprWithPrefix(pkg, mdata, "rpc:option:")
-}
-
-func optionsFromExprWithPrefix(pkg string, mdata expr.MetaExpr, prefix string) map[string]string {
-	if !strings.HasSuffix(prefix, ":") {
-		prefix += ":"
-	}
-	options := make(map[string]string)
-	options["go_package"] = pkg + "pb"
-	for key, value := range mdata {
-		if !strings.HasPrefix(key, prefix) {
-			continue
-		}
-		name := key[len(prefix):]
-		if strings.Contains(name, ":") {
-			continue
-		}
-		val := value[0]
-		if !validOption(name, val) {
-			continue
-		}
-
-		options[name] = val
-	}
-	return options
 }
 
 const (
@@ -134,11 +95,8 @@ const (
 syntax = {{ printf "%q" .ProtoVersion }};
 
 package {{ .Pkg }};
-{{ if .Options }}
-	{{- range $key, $value := .Options }}
-option {{ $key }} = "{{ $value }}";
-	{{- end }}
-{{- end }}
+
+option go_package = "/{{ .Pkg }}pb";
 `
 
 	// input: ServiceData
