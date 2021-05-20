@@ -2,7 +2,6 @@ package generator
 
 import (
 	"context"
-
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/eval"
 	"goa.design/goa/v3/expr"

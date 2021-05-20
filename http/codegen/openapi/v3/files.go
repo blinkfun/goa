@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"text/template"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/expr"

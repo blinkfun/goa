@@ -3,13 +3,8 @@ package openapi
 import (
 	"encoding/json"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
-
-func init() {
-	// FIXME See the changes in https://github.com/go-yaml/yaml/releases/tag/v2.4.0
-	yaml.FutureLineWrap()
-}
 
 // MarshalJSON produces the JSON resulting from encoding an object composed of
 // the fields in v (which must me a struct) and the keys in extensions.

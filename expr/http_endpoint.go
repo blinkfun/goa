@@ -64,6 +64,8 @@ type (
 		// MultipartRequest indicates that the request content type for
 		// the endpoint is a multipart type.
 		MultipartRequest bool
+		// Redirect defines a redirect for the endpoint.
+		Redirect *HTTPRedirectExpr
 		// Meta is a set of key/value pairs with semantic that is
 		// specific to each generator, see dsl.Meta.
 		Meta MetaExpr
@@ -261,7 +263,9 @@ func (e *HTTPEndpointExpr) Prepare() {
 	// Make sure there's a default success response if none define explicitly.
 	if len(e.Responses) == 0 {
 		status := StatusOK
-		if e.MethodExpr.Result.Type == Empty && !e.SkipResponseBodyEncodeDecode {
+		if e.Redirect != nil {
+			status = e.Redirect.StatusCode
+		} else if e.MethodExpr.Result.Type == Empty && !e.SkipResponseBodyEncodeDecode {
 			status = StatusNoContent
 		}
 		e.Responses = []*HTTPResponseExpr{{StatusCode: status}}
@@ -339,6 +343,20 @@ func (e *HTTPEndpointExpr) Validate() error {
 			if len(rt.Views) > 1 {
 				verr.Add(e, "Endpoint cannot use SkipResponseBodyEncodeDecode when method result type defines multiple views.")
 			}
+		}
+	}
+
+	// Redirect is not compatible with Response.
+	if e.Redirect != nil {
+		found := false
+		for _, r := range e.Responses {
+			if r.StatusCode != e.Redirect.StatusCode {
+				found = true
+				break
+			}
+		}
+		if found {
+			verr.Add(e, "Endpoint cannot use Response when using Redirect.")
 		}
 	}
 
@@ -885,6 +903,21 @@ func (r *RouteExpr) Validate() *eval.ValidationErrors {
 	if r.Endpoint.MethodExpr.IsStreaming() && len(r.Endpoint.Responses) > 0 {
 		if r.Method != "GET" {
 			verr.Add(r, "WebSocket endpoint supports only \"GET\" method. Got %q.", r.Method)
+		}
+	}
+
+	// HEAD method must not return a response body as per RFC 2616 section 9.4
+	if r.Method == "HEAD" {
+		disallowBody := func(resp *HTTPResponseExpr) {
+			if httpResponseBody(r.Endpoint, resp).Type != Empty {
+				verr.Add(r, "HTTP status %d: Response body defined for HEAD method which does not allow response body.", resp.StatusCode)
+			}
+		}
+		for _, resp := range r.Endpoint.Responses {
+			disallowBody(resp)
+		}
+		for _, e := range r.Endpoint.HTTPErrors {
+			disallowBody(e.Response)
 		}
 	}
 	return verr

@@ -163,8 +163,8 @@ func (g *Generator) Run() ([]string, error) {
 		}
 		for i, a := range os.Args[1:] {
 			for _, p := range gopaths {
-				if strings.Contains(a, p) {
-					args[i] = strings.Replace(a, p, "$(GOPATH)", -1)
+				if strings.HasPrefix(a, p) {
+					args[i] = strings.Replace(a, p, "$(GOPATH)", 1)
 					break
 				}
 			}

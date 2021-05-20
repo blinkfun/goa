@@ -744,6 +744,29 @@ var ResultWithResultCollectionDSL = func() {
 	})
 }
 
+var EmptyErrorResponseBodyDSL = func() {
+	Service("ServiceEmptyErrorResponseBody", func() {
+		Method("MethodEmptyErrorResponseBody", func() {
+			Error("internal_error")
+			Error("not_found", String)
+			HTTP(func() {
+				POST("/")
+				Response(StatusOK)
+				Response("internal_error", StatusInternalServerError, func() {
+					Body(Empty)
+					Header("name:Error-Name")
+					Header("id:Error-ID")
+					Header("message:Error-message")
+				})
+				Response("not_found", StatusNotFound, func() {
+					Body(Empty)
+					Header("in-header")
+				})
+			})
+		})
+	})
+}
+
 var ResultWithResultViewDSL = func() {
 	var RT = ResultType("RT", func() {
 		Attributes(func() {
@@ -1036,6 +1059,17 @@ var ResultBodyPrimitiveBoolDSL = func() {
 			Result(Boolean, func() {
 				Enum(true)
 			})
+			HTTP(func() {
+				POST("/")
+			})
+		})
+	})
+}
+
+var ResultBodyPrimitiveAnyDSL = func() {
+	Service("ServiceBodyPrimitiveAny", func() {
+		Method("MethodBodyPrimitiveAny", func() {
+			Result(Any)
 			HTTP(func() {
 				POST("/")
 			})

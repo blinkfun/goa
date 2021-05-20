@@ -4,7 +4,7 @@
 #
 # Targets:
 # - "depend" retrieves the Go packages needed to run the linter and tests
-# - "lint" runs the linter and checks the code format using goimports
+# - "lint" runs the linter
 # - "test" runs the tests
 # - "release" creates a new release commit, tags the commit and pushes the tag to GitHub.
 #   "release" also updates the examples and plugins repo and pushes the updates to GitHub.
@@ -13,8 +13,8 @@
 # - "all" is the default target, it runs "lint" and "test"
 #
 MAJOR=3
-MINOR=3
-BUILD=1
+MINOR=4
+BUILD=2
 
 GOOS=$(shell go env GOOS)
 GO_FILES=$(shell find . -type f -name '*.go')
@@ -24,11 +24,9 @@ GOPATH=$(shell go env GOPATH)
 # Standard dependencies are installed via go get
 DEPEND=\
 	golang.org/x/lint/golint \
-	golang.org/x/tools/cmd/goimports \
-	google.golang.org/protobuf/cmd/protoc-gen-go \
-        google.golang.org/grpc/cmd/protoc-gen-go-grpc \
-	honnef.co/go/tools/cmd/staticcheck \
-	github.com/getkin/kin-openapi
+	google.golang.org/protobuf/cmd/protoc-gen-go@v1.26.0 \
+        google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1.0 \
+	honnef.co/go/tools/cmd/staticcheck
 
 all: lint test
 
@@ -55,6 +53,7 @@ depend:
 	@echo INSTALLING DEPENDENCIES...
 	@go mod download
 	@go get -u -v $(DEPEND)
+	@go mod tidy
 	@echo INSTALLING PROTOC...
 	@mkdir $(PROTOC)
 	@cd $(PROTOC); \
@@ -77,7 +76,9 @@ endif
 test:
 	env GO111MODULE=on go test ./...
 
-release:
+release: release-goa release-examples release-plugins
+
+release-goa:
 	# First make sure all is clean
 	git diff-index --quiet HEAD
 	cd $(GOPATH)/src/goa.design/examples && \
@@ -101,16 +102,18 @@ release:
 	cd cmd/goa && go install
 	git push origin v$(MAJOR)
 	git push origin v$(MAJOR).$(MINOR).$(BUILD)
-	# Update examples
+
+release-examples:
 	cd $(GOPATH)/src/goa.design/examples && \
 		sed 's/goa.design\/goa\/v.*/goa.design\/goa\/v$(MAJOR) v$(MAJOR).$(MINOR).$(BUILD)/' go.mod > _tmp && mv _tmp go.mod && \
 		make && \
 		git add . && \
 		git commit -m "Release v$(MAJOR).$(MINOR).$(BUILD)" && \
 		git tag v$(MAJOR).$(MINOR).$(BUILD) && \
-		git push origin master
+		git push origin master && \
 		git push origin v$(MAJOR).$(MINOR).$(BUILD)
-	# Update plugins
+
+release-plugins:
 	cd $(GOPATH)/src/goa.design/plugins && \
 		sed 's/goa.design\/goa\/v.*/goa.design\/goa\/v$(MAJOR) v$(MAJOR).$(MINOR).$(BUILD)/' go.mod > _tmp && mv _tmp go.mod && \
 		make && \

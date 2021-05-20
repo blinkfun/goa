@@ -40,6 +40,7 @@ func TestFiles(t *testing.T) {
 		{"with-spaces", testdata.WithSpacesDSL},
 		{"with-map", testdata.WithMapDSL},
 		{"path-with-wildcards", testdata.PathWithWildcardDSL},
+		{"with-tags", testdata.WithTagsDSL},
 		// TestEndpoints
 		{"endpoint", testdata.ExtensionDSL},
 		// TestValidations
@@ -119,7 +120,7 @@ func prettifyJSON(t *testing.T, b []byte) string {
 }
 
 func validateSwagger(t *testing.T, b []byte) {
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(b)
+	swagger, err := openapi3.NewLoader().LoadFromData(b)
 	if err == nil {
 		err = swagger.Validate(context.Background())
 	}
