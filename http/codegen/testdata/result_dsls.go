@@ -750,17 +750,33 @@ var EmptyErrorResponseBodyDSL = func() {
 			Error("internal_error")
 			Error("not_found", String)
 			HTTP(func() {
-				POST("/")
+				HEAD("/")
 				Response(StatusOK)
 				Response("internal_error", StatusInternalServerError, func() {
 					Body(Empty)
 					Header("name:Error-Name")
-					Header("id:Error-ID")
-					Header("message:Error-message")
 				})
 				Response("not_found", StatusNotFound, func() {
 					Body(Empty)
 					Header("in-header")
+				})
+			})
+		})
+	})
+}
+
+var EmptyCustomErrorResponseBodyDSL = func() {
+	var ErrorType = Type("Error", func() {
+		Attribute("err", String)
+	})
+	Service("ServiceEmptyCustomErrorResponseBody", func() {
+		Method("MethodEmptyCustomErrorResponseBody", func() {
+			Error("internal_error", ErrorType)
+			HTTP(func() {
+				HEAD("/")
+				Response(StatusOK)
+				Response("internal_error", StatusInternalServerError, func() {
+					Body(Empty)
 				})
 			})
 		})

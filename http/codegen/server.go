@@ -35,12 +35,13 @@ func serverFile(genpkg string, svc *expr.HTTPServiceExpr) *codegen.File {
 	path := filepath.Join(codegen.Gendir, "http", svcName, "server", "server.go")
 	title := fmt.Sprintf("%s HTTP server", svc.Name())
 	funcs := map[string]interface{}{
-		"join":                func(ss []string, s string) string { return strings.Join(ss, s) },
-		"hasWebSocket":        hasWebSocket,
-		"isWebSocketEndpoint": isWebSocketEndpoint,
-		"viewedServerBody":    viewedServerBody,
-		"mustDecodeRequest":   mustDecodeRequest,
-		"addLeadingSlash":     addLeadingSlash,
+		"join":                    func(ss []string, s string) string { return strings.Join(ss, s) },
+		"hasWebSocket":            hasWebSocket,
+		"isWebSocketEndpoint":     isWebSocketEndpoint,
+		"viewedServerBody":        viewedServerBody,
+		"mustDecodeRequest":       mustDecodeRequest,
+		"addLeadingSlash":         addLeadingSlash,
+		"removeTrailingIndexHTML": removeTrailingIndexHTML,
 	}
 	sections := []*codegen.SectionTemplate{
 		codegen.Header(title, "server", []*codegen.ImportSpec{
@@ -246,6 +247,13 @@ func addLeadingSlash(s string) string {
 	return "/" + s
 }
 
+func removeTrailingIndexHTML(s string) string {
+	if strings.HasSuffix(s, "/index.html") {
+		return strings.TrimSuffix(s, "index.html")
+	}
+	return s
+}
+
 func mapQueryDecodeData(dt expr.DataType, varName string, inc int) map[string]interface{} {
 	return map[string]interface{}{
 		"Type":      dt,
@@ -368,9 +376,12 @@ func {{ .MountServer }}(mux goahttp.Muxer, h *{{ .ServerStruct }}) {
 	{{ .MountHandler }}(mux, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "{{ .Redirect.URL }}", {{ .Redirect.StatusCode }})
 		}))
-	 	{{- else }}
-			{{- $filepath := addLeadingSlash .FilePath }}
-	{{ .MountHandler }}(mux, {{ range .RequestPaths }}{{if ne . $filepath }}goahttp.ReplacePrefix("{{ . }}", "{{ $filepath }}", {{ end }}{{ end }}h.{{ .VarName }}){{ range .RequestPaths }}{{ if ne . $filepath }}){{ end}}{{ end }}
+	 	{{- else if .IsDir }}
+			{{- $filepath := addLeadingSlash (removeTrailingIndexHTML .FilePath) }}
+	{{ .MountHandler }}(mux, {{ range .RequestPaths }}{{if ne . $filepath }}goahttp.Replace("{{ . }}", "{{ $filepath }}", {{ end }}{{ end }}h.{{ .VarName }}){{ range .RequestPaths }}{{ if ne . $filepath }}){{ end}}{{ end }}
+		{{- else }}
+			{{- $filepath := addLeadingSlash (removeTrailingIndexHTML .FilePath) }}
+	{{ .MountHandler }}(mux, {{ range .RequestPaths }}{{if ne . $filepath }}goahttp.Replace("", "{{ $filepath }}", {{ end }}{{ end }}h.{{ .VarName }}){{ range .RequestPaths }}{{ if ne . $filepath }}){{ end}}{{ end }}
 		{{- end }}
 	{{- end }}
 }
@@ -1248,12 +1259,15 @@ const responseT = `{{ define "response" -}}
 		{{- $initDef := and (or .FieldPointer .Slice) .DefaultValue (not $.TagName) }}
 		{{- $checkNil := and (or .FieldPointer .Slice (eq .Type.Name "bytes") (eq .Type.Name "any") $initDef) (not $.TagName) }}
 		{{- if $checkNil }}
-	if res.{{ if $.ViewedResult }}Projected.{{ end }}{{ .FieldName }} != nil {
+	if res{{ if .FieldName }}.{{ end }}{{ if $.ViewedResult }}Projected.{{ end }}{{ if .FieldName }}{{ .FieldName }}{{ end }} != nil {
 		{{- end }}
 
 		{{- if and (eq .Type.Name "string") (not (isAliased .FieldType)) }}
 	w.Header().Set("{{ .CanonicalName }}", {{ if or .FieldPointer $.ViewedResult }}*{{ end }}res{{ if $.ViewedResult }}.Projected{{ end }}{{ if .FieldName }}.{{ .FieldName }}{{ end }})
 		{{- else }}
+{{- if not $checkNil }}
+{
+{{- end }}
 			{{- if isAliased .FieldType }}
 	val := {{ goTypeRef .Type }}({{ if .FieldPointer }}*{{ end }}res{{ if $.ViewedResult }}.Projected{{ end }}{{ if .FieldName }}.{{ .FieldName }}{{ end }})
 	{{ template "header_conversion" (headerConversionData .Type (printf "%ss" .VarName) true "val") }}
@@ -1262,6 +1276,9 @@ const responseT = `{{ define "response" -}}
 	{{ template "header_conversion" (headerConversionData .Type (printf "%ss" .VarName) (not .FieldPointer) "val") }}
 			{{- end }}
 	w.Header().Set("{{ .CanonicalName }}", {{ .VarName }}s)
+{{- if not $checkNil }}
+}
+{{- end }}
 		{{- end }}
 
 		{{- if $initDef }}

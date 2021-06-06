@@ -863,14 +863,14 @@ func DecodeMethodEmptyErrorResponseBodyResponse(decoder func(*http.Response) goa
 				err = goa.MergeErrors(err, goa.MissingFieldError("Error-Name", "header"))
 			}
 			name = nameRaw
-			idRaw := resp.Header.Get("Error-Id")
+			idRaw := resp.Header.Get("X-Attribute-Id")
 			if idRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("Error-ID", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("x-attribute-id", "header"))
 			}
 			id = idRaw
-			messageRaw := resp.Header.Get("Error-Message")
+			messageRaw := resp.Header.Get("X-Attribute-Message")
 			if messageRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("Error-message", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("x-attribute-message", "header"))
 			}
 			message = messageRaw
 			if err != nil {
